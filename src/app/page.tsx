@@ -1,63 +1,127 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { Sidebar } from "@/components/Sidebar";
+import { FolderCard } from "@/components/FolderCard";
+import { MoodSwitcher } from "@/components/MoodSwitcher";
+import { SearchBar } from "@/components/SearchBar";
+import { getFolders } from "@/lib/skills";
+import type { Folder, MoodPalette } from "@/lib/types";
+
+const allFolders: Folder[] = getFolders();
+
+export default function HomePage() {
+  const router = useRouter();
+  const [search, setSearch] = useState("");
+  const [activeFolder, setActiveFolder] = useState<string | null>(null);
+  const [mood, setMood] = useState<MoodPalette>("default");
+
+  const filteredFolders = useMemo(() => {
+    let result = allFolders;
+
+    if (activeFolder) {
+      result = result.filter((f) => f.slug === activeFolder);
+    }
+
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      result = result.filter((f) => f.name.toLowerCase().includes(q));
+    }
+
+    return result;
+  }, [search, activeFolder]);
+
+  const activeFolderData = activeFolder
+    ? allFolders.find((f) => f.slug === activeFolder)
+    : null;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div
+      style={{
+        display: "flex",
+        minHeight: "100vh",
+        background: "#f8f7f7",
+        fontFamily: "var(--font-inter), system-ui, -apple-system, sans-serif",
+      }}
+    >
+      <Sidebar
+        folders={allFolders}
+        activeFolder={activeFolder}
+        onFolderClick={(slug) =>
+          setActiveFolder(slug === activeFolder ? null : slug)
+        }
+      />
+
+      <main
+        style={{
+          marginLeft: 240,
+          padding: "28px 40px",
+          flex: 1,
+          minWidth: 0,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 28,
+            gap: 16,
+          }}
+        >
+          <h1
+            style={{
+              fontSize: 18,
+              fontWeight: 620,
+              letterSpacing: "-0.02em",
+              color: "#1a1a1a",
+              margin: 0,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {activeFolderData ? activeFolderData.name : "Tous les skills"}
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <SearchBar
+              value={search}
+              onChange={setSearch}
+              placeholder="Rechercher un dossier..."
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <MoodSwitcher mood={mood} onMoodChange={setMood} />
+          </div>
+        </div>
+
+        <div
+          data-mood-target=""
+          className={`pal-${mood}`}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+            gap: 16,
+          }}
+        >
+          {filteredFolders.map((folder) => (
+            <FolderCard
+              key={folder.slug}
+              folder={folder}
+              href={`/folder/${folder.slug}`}
+            />
+          ))}
+
+          {filteredFolders.length === 0 && (
+            <p
+              style={{
+                gridColumn: "1 / -1",
+                textAlign: "center",
+                color: "#999",
+                fontSize: 14,
+                padding: "40px 0",
+              }}
+            >
+              Aucun dossier trouvé
+            </p>
+          )}
         </div>
       </main>
     </div>
