@@ -9,6 +9,7 @@ export interface Skill {
   content: string;
   category: string;
   folder: string;
+  source_url?: string;
 }
 
 export interface Folder {

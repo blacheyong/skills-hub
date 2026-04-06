@@ -8,20 +8,25 @@ import { FolderCard } from "@/components/FolderCard";
 import { MoodSwitcher } from "@/components/MoodSwitcher";
 import { SearchBar } from "@/components/SearchBar";
 import { isAuthenticated, logout } from "@/lib/auth";
-import { getFolders, getSkills } from "@/lib/skills";
-import type { MoodPalette } from "@/lib/types";
-
-const allFolders = getFolders();
-const allSkills = getSkills();
+import { loadData } from "@/lib/store";
+import type { Skill, Folder, MoodPalette } from "@/lib/types";
 
 export default function HomePage() {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [activeFolder, setActiveFolder] = useState<string | null>(null);
   const [mood, setMood] = useState<MoodPalette>("default");
+  const [allFolders, setAllFolders] = useState<Folder[]>([]);
+  const [allSkills, setAllSkills] = useState<Skill[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!isAuthenticated()) router.push("/login");
+    if (!isAuthenticated()) { router.push("/login"); return; }
+    loadData().then(({ skills, folders }) => {
+      setAllSkills(skills);
+      setAllFolders(folders);
+      setLoading(false);
+    });
   }, [router]);
 
   const handleLogout = () => {

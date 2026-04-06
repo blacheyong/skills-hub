@@ -1,25 +1,35 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillCard } from "@/components/SkillCard";
 import { SearchBar } from "@/components/SearchBar";
 import { CopyButton } from "@/components/CopyButton";
-import { getFolders, getSkillsByFolder } from "@/lib/skills";
-import type { Folder } from "@/lib/types";
-
-const allFolders: Folder[] = getFolders();
+import { loadData } from "@/lib/store";
+import type { Skill, Folder } from "@/lib/types";
 
 export default function FolderPage() {
   const params = useParams<{ slug: string }>();
   const router = useRouter();
   const [search, setSearch] = useState("");
+  const [allFolders, setAllFolders] = useState<Folder[]>([]);
+  const [allSkills, setAllSkills] = useState<Skill[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const slug = params.slug;
+
+  useEffect(() => {
+    loadData().then(({ skills, folders }) => {
+      setAllSkills(skills);
+      setAllFolders(folders);
+      setLoading(false);
+    });
+  }, []);
+
   const folder = allFolders.find((f) => f.slug === slug);
-  const skills = getSkillsByFolder(slug);
+  const skills = allSkills.filter((s) => s.folder === slug);
 
   const filteredSkills = useMemo(() => {
     if (!search.trim()) return skills;

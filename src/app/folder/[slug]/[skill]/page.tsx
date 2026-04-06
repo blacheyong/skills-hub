@@ -5,10 +5,9 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
 import { CopyButton } from "@/components/CopyButton";
-import { getFolders, getSkillBySlug } from "@/lib/skills";
-import type { Folder } from "@/lib/types";
-
-const allFolders: Folder[] = getFolders();
+import { loadData } from "@/lib/store";
+import type { Skill, Folder } from "@/lib/types";
+import { useState, useEffect } from "react";
 
 const TAG_COLORS: Record<string, { bg: string; text: string }> = {
   design: { bg: "#f0e6ff", text: "#7c3aed" },
@@ -31,12 +30,23 @@ function getTagColor(tag: string) {
 export default function SkillDetailPage() {
   const params = useParams<{ slug: string; skill: string }>();
   const router = useRouter();
+  const [allFolders, setAllFolders] = useState<Folder[]>([]);
+  const [allSkills, setAllSkills] = useState<Skill[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadData().then(({ skills, folders }) => {
+      setAllSkills(skills);
+      setAllFolders(folders);
+      setLoading(false);
+    });
+  }, []);
 
   const folderSlug = params.slug;
   const skillSlug = params.skill;
 
   const folder = allFolders.find((f) => f.slug === folderSlug);
-  const skill = getSkillBySlug(folderSlug, skillSlug);
+  const skill = allSkills.find((s) => s.folder === folderSlug && s.slug === skillSlug);
 
   if (!folder || !skill) {
     return (
@@ -86,8 +96,8 @@ export default function SkillDetailPage() {
   }
 
   const installCommand = `claude skill install github.com/guillonl/skills-library/${skill.category}/${folderSlug}/${skill.slug}`;
-  const githubUrl = `https://github.com/guillonl/skills-library/blob/main/${skill.category}/${folderSlug}/${skill.slug}.md`;
-  const rawUrl = `https://raw.githubusercontent.com/guillonl/skills-library/main/${skill.category}/${folderSlug}/${skill.slug}.md`;
+  const repoUrl = `https://github.com/guillonl/skills-library/blob/main/${skill.category}/${folderSlug}/${skill.slug}.md`;
+  const externalUrl = skill.source_url || null;
 
   return (
     <div
@@ -185,7 +195,7 @@ export default function SkillDetailPage() {
               {skill.name}
             </h1>
             <a
-              href={githubUrl}
+              href={externalUrl || repoUrl}
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -211,7 +221,7 @@ export default function SkillDetailPage() {
               }}
             >
               <ExternalLink size={14} />
-              Voir sur GitHub
+              {externalUrl ? "Voir la source" : "Voir sur GitHub"}
             </a>
           </div>
 
