@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ExternalLink, Download } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
 import { CopyButton } from "@/components/CopyButton";
 import { getFolders, getSkillBySlug } from "@/lib/skills";
@@ -212,36 +212,6 @@ export default function SkillDetailPage() {
             >
               <ExternalLink size={14} />
               Voir sur GitHub
-            </a>
-            <a
-              href={rawUrl}
-              download={`${skill.slug}.md`}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "6px 14px",
-                background: "transparent",
-                color: "#8a8a8f",
-                borderRadius: 8,
-                fontSize: 13,
-                fontWeight: 500,
-                textDecoration: "none",
-                whiteSpace: "nowrap",
-                border: "1px solid rgba(0,0,0,0.08)",
-                transition: "all 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "rgba(0,0,0,0.15)";
-                e.currentTarget.style.color = "#2e2e30";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "rgba(0,0,0,0.08)";
-                e.currentTarget.style.color = "#8a8a8f";
-              }}
-            >
-              <Download size={14} />
-              Télécharger
             </a>
           </div>
 
