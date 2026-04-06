@@ -3,27 +3,11 @@
 import { useState } from 'react';
 import type { MoodPalette } from '@/lib/types';
 
-const PALETTES: { id: MoodPalette; label: string; colors: string[] }[] = [
-  {
-    id: 'default',
-    label: 'Default',
-    colors: ['#f97316', '#3b82f6', '#a855f7', '#22c55e'],
-  },
-  {
-    id: 'sunset',
-    label: 'Sunset',
-    colors: ['#f97316', '#ef4444', '#ec4899', '#f59e0b'],
-  },
-  {
-    id: 'ocean',
-    label: 'Ocean',
-    colors: ['#0ea5e9', '#3b82f6', '#6366f1', '#14b8a6'],
-  },
-  {
-    id: 'mono',
-    label: 'Mono',
-    colors: ['#525252', '#737373', '#a3a3a3', '#d4d4d4'],
-  },
+const PALETTES: { id: MoodPalette; label: string; gradient: string }[] = [
+  { id: 'default', label: 'Original', gradient: 'conic-gradient(from 120deg, #e4e4e9, #8494e2, #f0d060, #5ac488, #e88070)' },
+  { id: 'sunset', label: 'Sunset', gradient: 'conic-gradient(from 120deg, #ffb870, #f07888, #ffd470, #ffa8c8)' },
+  { id: 'ocean', label: 'Ocean', gradient: 'conic-gradient(from 120deg, #80c0e0, #90d0b8, #a8c0f0, #68c8c0)' },
+  { id: 'mono', label: 'Mono', gradient: 'conic-gradient(from 120deg, #d8d8dc, #bbbbc2, #c4c4ca, #e0e0e4)' },
 ];
 
 interface MoodSwitcherProps {
@@ -32,82 +16,92 @@ interface MoodSwitcherProps {
 }
 
 export function MoodSwitcher({ mood, onMoodChange }: MoodSwitcherProps) {
-  const [hoveredPalette, setHoveredPalette] = useState<MoodPalette | null>(null);
+  const [hovered, setHovered] = useState<MoodPalette | null>(null);
 
   return (
     <div
-      className="flex items-center gap-2.5 rounded-2xl px-2.5 py-2"
       style={{
-        background: 'rgba(255, 255, 255, 0.55)',
-        backdropFilter: 'blur(20px) saturate(1.6)',
-        WebkitBackdropFilter: 'blur(20px) saturate(1.6)',
-        boxShadow:
-          '0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.5)',
+        position: 'fixed',
+        right: 16,
+        top: '50%',
+        transform: 'translateY(-50%)',
+        zIndex: 100,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 3,
+        padding: 5,
+        background: 'rgba(255,255,255,0.5)',
+        backdropFilter: 'blur(20px) saturate(1.4)',
+        WebkitBackdropFilter: 'blur(20px) saturate(1.4)',
+        border: '1px solid rgba(255,255,255,0.6)',
+        borderRadius: 14,
+        boxShadow: '0 0 0 0.5px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04), 0 8px 20px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.7)',
       }}
     >
-      {PALETTES.map((palette) => {
-        const isActive = mood === palette.id;
-        const isHovered = hoveredPalette === palette.id;
-
-        // Build conic gradient from palette colors
-        const conicStops = palette.colors
-          .map((color, i) => {
-            const startDeg = (i / palette.colors.length) * 360;
-            const endDeg = ((i + 1) / palette.colors.length) * 360;
-            return `${color} ${startDeg}deg ${endDeg}deg`;
-          })
-          .join(', ');
+      {PALETTES.map((p) => {
+        const isActive = mood === p.id;
+        const isHovered = hovered === p.id;
 
         return (
-          <div key={palette.id} className="relative">
+          <button
+            key={p.id}
+            type="button"
+            onClick={() => onMoodChange(p.id)}
+            onMouseEnter={() => setHovered(p.id)}
+            onMouseLeave={() => setHovered(null)}
+            aria-label={`Palette ${p.label}`}
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 8,
+              border: 'none',
+              background: 'transparent',
+              cursor: 'pointer',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.15s cubic-bezier(0.23, 1, 0.32, 1)',
+            }}
+          >
             {/* Tooltip */}
             {isHovered && (
-              <div
-                className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#2e2e30] px-2.5 py-1 text-[11px] font-medium text-white shadow-lg"
+              <span
                 style={{
-                  opacity: 1,
+                  position: 'absolute',
+                  right: 38,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: '#2e2e30',
+                  color: '#fff',
+                  fontSize: 11,
+                  fontWeight: 540,
+                  padding: '3px 8px',
+                  borderRadius: 6,
+                  whiteSpace: 'nowrap',
+                  pointerEvents: 'none',
                 }}
               >
-                {palette.label}
-              </div>
+                {p.label}
+              </span>
             )}
 
-            <button
-              type="button"
-              onClick={() => onMoodChange(palette.id)}
-              onMouseEnter={() => setHoveredPalette(palette.id)}
-              onMouseLeave={() => setHoveredPalette(null)}
-              className="relative flex items-center justify-center transition-transform duration-150"
+            {/* Dot */}
+            <div
               style={{
-                width: 24,
-                height: 24,
-                transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)',
+                width: 14,
+                height: 14,
+                borderRadius: '50%',
+                background: p.gradient,
+                boxShadow: isActive
+                  ? '0 0 0 2px #fff, 0 0 0 3.5px rgba(0,0,0,0.12)'
+                  : '0 1px 3px rgba(0,0,0,0.1)',
+                transition: 'all 0.2s cubic-bezier(0.23, 1, 0.32, 1)',
+                transform: isHovered ? 'scale(1.12)' : 'scale(1)',
               }}
-              aria-label={`Palette ${palette.label}`}
-            >
-              {/* Active ring */}
-              {isActive && (
-                <div
-                  className="absolute inset-[-3px] rounded-full"
-                  style={{
-                    border: '2px solid white',
-                    boxShadow: '0 0 0 1px rgba(0,0,0,0.08)',
-                  }}
-                />
-              )}
-
-              {/* Dot with conic gradient preview */}
-              <div
-                className="rounded-full"
-                style={{
-                  width: 16,
-                  height: 16,
-                  background: `conic-gradient(${conicStops})`,
-                  boxShadow: '0 0.5px 2px rgba(0,0,0,0.12)',
-                }}
-              />
-            </button>
-          </div>
+            />
+          </button>
         );
       })}
     </div>

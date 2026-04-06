@@ -36,19 +36,30 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.14); }
 
 /* ====== 3D FOLDER ====== */
-.folder { position: relative; transition: transform 0.3s var(--ease-out); }
+.folder {
+  width: 100px; height: 76px;
+  position: relative;
+  transition: transform 0.3s var(--ease-out);
+}
 .folder .tab {
-  position: absolute; border-radius: 5px 5px 0 0;
+  position: absolute;
+  width: 34px; height: 10px;
+  border-radius: 5px 5px 0 0;
+  bottom: 60px; left: 5px;
   transition: background 0.6s var(--ease-out);
 }
 .folder .back {
-  position: absolute; bottom: 0; left: 0; right: 0;
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
   border-radius: 3px 10px 10px 10px;
   box-shadow: var(--folder-shadow);
   transition: background 0.6s var(--ease-out);
 }
 .folder .front {
-  position: absolute; bottom: 0; left: 0; right: 0;
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 42px;
   border-radius: 3px 10px 10px 10px;
   transition: background 0.6s var(--ease-out), opacity 0.6s var(--ease-out);
 }

@@ -48,6 +48,7 @@ export default function FolderPage() {
           folders={allFolders}
           activeFolder={null}
           onFolderClick={(s) => router.push(`/folder/${s}`)}
+          onLogout={() => router.push("/login")}
         />
         <main
           style={{
@@ -93,6 +94,7 @@ export default function FolderPage() {
         folders={allFolders}
         activeFolder={slug}
         onFolderClick={(s) => router.push(`/folder/${s}`)}
+          onLogout={() => router.push("/login")}
       />
 
       <main

@@ -8,7 +8,7 @@ import {
   PenTool,
   Compass,
   Clapperboard,
-  Plus,
+  LogOut,
 } from 'lucide-react';
 import type { Folder as FolderType } from '@/lib/types';
 import { METIER_ICONS } from '@/lib/types';
@@ -17,6 +17,7 @@ interface SidebarProps {
   folders: FolderType[];
   activeFolder: string | null;
   onFolderClick: (slug: string) => void;
+  onLogout?: () => void;
 }
 
 /** Maps metier icon name to Lucide component */
@@ -35,7 +36,7 @@ function getMetierIcon(slug: string) {
   return Folder;
 }
 
-export function Sidebar({ folders, activeFolder, onFolderClick }: SidebarProps) {
+export function Sidebar({ folders, activeFolder, onFolderClick, onLogout }: SidebarProps) {
   const [searchValue, setSearchValue] = useState('');
 
   const projectFolders = folders.filter((f) => f.type === 'project');
@@ -128,10 +129,11 @@ export function Sidebar({ folders, activeFolder, onFolderClick }: SidebarProps) 
       <div className="px-3 pb-4 pt-2">
         <button
           type="button"
+          onClick={onLogout}
           className="flex w-full items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-[12px] font-medium text-[#b8b8bc] transition-colors duration-150 hover:bg-black/[0.03] hover:text-[#8a8a8f]"
         >
-          <Plus size={14} strokeWidth={1.8} />
-          Nouveau projet
+          <LogOut size={14} strokeWidth={1.8} />
+          Se déconnecter
         </button>
       </div>
     </aside>

@@ -40,11 +40,8 @@ export function FolderCard({ folder, href }: FolderCardProps) {
         e.currentTarget.style.transform = 'translateY(-2px)';
       }}
     >
-      {/* 3D CSS Folder */}
-      <div
-        className={`folder ${colorClass}`}
-        style={{ width: 100, height: 76, position: 'relative' }}
-      >
+      {/* 3D CSS Folder — uses classes from globals.css */}
+      <div className={`folder ${colorClass}`}>
         <div className="tab" />
         <div className="back" />
         <div className="front" />
