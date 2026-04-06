@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { FolderCard } from "@/components/FolderCard";
 import { MoodSwitcher } from "@/components/MoodSwitcher";
 import { SearchBar } from "@/components/SearchBar";
-import { useRouter } from "next/navigation";
+import { isAuthenticated, logout } from "@/lib/auth";
 import { getFolders, getSkills } from "@/lib/skills";
 import type { MoodPalette } from "@/lib/types";
 
@@ -18,6 +19,15 @@ export default function HomePage() {
   const [search, setSearch] = useState("");
   const [activeFolder, setActiveFolder] = useState<string | null>(null);
   const [mood, setMood] = useState<MoodPalette>("default");
+
+  useEffect(() => {
+    if (!isAuthenticated()) router.push("/login");
+  }, [router]);
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
 
   const q = search.toLowerCase().trim();
 
@@ -66,7 +76,7 @@ export default function HomePage() {
         onFolderClick={(slug) =>
           setActiveFolder(slug === activeFolder ? null : slug)
         }
-        onLogout={() => router.push("/login")}
+        onLogout={handleLogout}
       />
 
       <MoodSwitcher mood={mood} onMoodChange={setMood} />
