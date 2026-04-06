@@ -39,8 +39,8 @@ function getMetierIcon(slug: string) {
 export function Sidebar({ folders, activeFolder, onFolderClick, onLogout }: SidebarProps) {
   const [searchValue, setSearchValue] = useState('');
 
-  const projectFolders = folders.filter((f) => f.type === 'project');
-  const metierFolders = folders.filter((f) => f.type === 'metier');
+  const projectFolders = folders.filter((f) => f.type === 'projects');
+  const metierFolders = folders.filter((f) => f.type === 'metiers');
 
   // Filter by search
   const filterFolders = (list: FolderType[]) => {

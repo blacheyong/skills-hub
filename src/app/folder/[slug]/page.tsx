@@ -6,10 +6,9 @@ import Link from "next/link";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillCard } from "@/components/SkillCard";
 import { SearchBar } from "@/components/SearchBar";
-import { MoodSwitcher } from "@/components/MoodSwitcher";
 import { CopyButton } from "@/components/CopyButton";
 import { getFolders, getSkillsByFolder } from "@/lib/skills";
-import type { Folder, MoodPalette } from "@/lib/types";
+import type { Folder } from "@/lib/types";
 
 const allFolders: Folder[] = getFolders();
 
@@ -17,7 +16,6 @@ export default function FolderPage() {
   const params = useParams<{ slug: string }>();
   const router = useRouter();
   const [search, setSearch] = useState("");
-  const [mood, setMood] = useState<MoodPalette>("default");
 
   const slug = params.slug;
   const folder = allFolders.find((f) => f.slug === slug);
@@ -174,14 +172,11 @@ export default function FolderPage() {
               onChange={setSearch}
               placeholder="Rechercher un skill..."
             />
-            <MoodSwitcher mood={mood} onMoodChange={setMood} />
           </div>
         </div>
 
         {/* Skills Grid */}
         <div
-          data-mood-target=""
-          className={`pal-${mood}`}
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",

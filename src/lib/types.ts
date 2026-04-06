@@ -15,7 +15,7 @@ export interface Folder {
   slug: string;
   name: string;
   skillCount: number;
-  type: 'project' | 'metier';
+  type: 'projects' | 'metiers';
   color: string;
   folderIndex: number;
 }

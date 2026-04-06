@@ -22,7 +22,7 @@ Amplify the hero elements — make headlines larger, give CTAs more presence, ad
 Maintain usability while increasing impact. Bold design is not loud design — it is confident, intentional, and memorable. Every amplification should serve a purpose: guiding attention, establishing brand voice, or creating emotional resonance.
 
 Validate that boldness does not compromise readability or navigation. Test at multiple viewport sizes to ensure impact scales appropriately.`,
-    category: 'metier',
+    category: 'metiers',
     folder: 'design-ui',
   },
   {
@@ -41,7 +41,7 @@ Use color to differentiate states (success, warning, error), highlight primary a
 Build a cohesive palette: one primary, one secondary, and neutrals. Use HSL for fine-tuned adjustments. Apply tints and shades rather than opacity to maintain vibrancy on different backgrounds.
 
 Test color choices against both light and dark modes. Validate with a color blindness simulator to ensure accessibility for deuteranopia, protanopia, and tritanopia users.`,
-    category: 'metier',
+    category: 'metiers',
     folder: 'design-ui',
   },
   {
@@ -60,7 +60,7 @@ Add personality through motion (subtle bounces, smooth reveals), playful copy (w
 Keep delight proportional to context. A banking app needs restrained elegance; a creative tool can be more expressive. Never let delight obstruct task completion or slow down repeat users.
 
 Use CSS animations and lightweight JS for effects. Respect prefers-reduced-motion for accessibility. Every delightful moment should feel earned — triggered by user action, not forced upon entry.`,
-    category: 'metier',
+    category: 'metiers',
     folder: 'design-ui',
   },
   {
@@ -79,7 +79,7 @@ Apply progressive disclosure — show only what is needed at each step. Move sec
 Simplify does not mean strip bare. Retain visual hierarchy, breathing room, and enough context for users to orient themselves. The goal is clarity, not emptiness.
 
 Test the simplified version against the original with real tasks. If users complete tasks faster with fewer errors, the distillation succeeded. Measure cognitive load reduction, not just element count.`,
-    category: 'metier',
+    category: 'metiers',
     folder: 'design-ui',
   },
   {
@@ -98,7 +98,7 @@ Use semantic HTML paired with utility-first CSS (Tailwind preferred). Every comp
 Before writing code, assess the design intent: is this a data-heavy dashboard, a marketing page, or an app shell? Each requires different density, rhythm, and visual weight. Adapt accordingly.
 
 Always deliver production-ready code — no placeholder content, no TODO comments, no broken responsive behavior. The output should be deployable as-is.`,
-    category: 'metier',
+    category: 'metiers',
     folder: 'design-ui',
   },
 
@@ -119,7 +119,7 @@ Apply the principle of meaningful motion: every animation must communicate somet
 Keep durations between 150-400ms for UI elements. Stagger related elements by 50-100ms for sequential reveals. Use CSS transitions for simple state changes and JavaScript animation libraries (Framer Motion, GSAP) for complex orchestration.
 
 Always implement prefers-reduced-motion media query to disable or simplify animations for users who need it. Test on low-end devices to ensure animations maintain 60fps.`,
-    category: 'metier',
+    category: 'metiers',
     folder: 'graphisme',
   },
   {
@@ -138,7 +138,7 @@ Use an 8px base grid for all spacing decisions. Define a spacing scale (4, 8, 12
 Fix layout monotony by varying content density across sections. Alternate between full-width, constrained, and multi-column layouts. Use CSS Grid for two-dimensional layouts and Flexbox for one-dimensional alignment.
 
 Validate layout at all breakpoints. Ensure touch targets are minimum 44x44px on mobile. Check that the visual hierarchy guides the eye in the correct reading order (F-pattern for content, Z-pattern for landing pages).`,
-    category: 'metier',
+    category: 'metiers',
     folder: 'graphisme',
   },
   {
@@ -157,7 +157,7 @@ Establish a modular type scale (e.g., 1.25 or 1.333 ratio) and apply it consiste
 Optimize readability: body text at 16-18px minimum, line-height at 1.5-1.7 for paragraphs, max line length of 65-75 characters. Avoid center-aligned body text and ensure sufficient contrast between text and background.
 
 Verify font loading strategy (font-display: swap), subset fonts for performance, and test rendering across OS/browser combinations. Typography should feel intentional, not incidental.`,
-    category: 'metier',
+    category: 'metiers',
     folder: 'graphisme',
   },
 
@@ -178,7 +178,7 @@ Apply the clarity hierarchy: what happened > why it matters > what to do next. E
 Eliminate jargon, internal terminology, and ambiguous pronouns. Use active voice, present tense, and second person ("You" not "The user"). Keep sentences under 20 words for instructional text.
 
 Maintain a consistent tone across all touchpoints. Create a microcopy style guide if one does not exist: define voice attributes (e.g., helpful, direct, warm), banned words, and patterns for common message types (confirmation, error, loading, success).`,
-    category: 'metier',
+    category: 'metiers',
     folder: 'ux-research',
   },
   {
@@ -197,7 +197,7 @@ Score each dimension on a 1-10 scale with specific justifications. Identify the 
 Run persona-based walkthroughs: simulate a first-time user, a power user, and an accessibility-dependent user navigating the primary flows. Document friction points, confusion moments, and drop-off risks for each persona.
 
 Deliver actionable recommendations with estimated effort (quick win, medium, major refactor) and expected impact. Prioritize fixes that improve task completion rate and reduce user error.`,
-    category: 'metier',
+    category: 'metiers',
     folder: 'ux-research',
   },
   {
@@ -216,7 +216,7 @@ Design progressive onboarding: reveal features as users need them, not all at on
 Craft empty states that inspire action: show what the populated state will look like, provide a clear primary CTA, and offer sample data or templates to reduce the blank-page problem. Never leave a user staring at an empty screen without guidance.
 
 Measure onboarding effectiveness with activation rate (% who reach value moment), time-to-value (duration from signup to activation), and drop-off points (where users abandon the flow). Iterate on the highest-drop-off step first.`,
-    category: 'metier',
+    category: 'metiers',
     folder: 'ux-research',
   },
 
@@ -237,7 +237,7 @@ Use fluid design techniques: clamp() for typography and spacing, min()/max() for
 Adapt interaction patterns per device: swipe gestures on touch, hover states on pointer, keyboard navigation on desktop. Ensure touch targets are minimum 44x44px and interactive elements have adequate spacing to prevent accidental taps.
 
 Test on real devices when possible, and use browser device emulation as a baseline. Validate that content reflow preserves reading order, navigation remains accessible, and no horizontal scrolling occurs at any viewport width.`,
-    category: 'metier',
+    category: 'metiers',
     folder: 'motion',
   },
   {
@@ -256,7 +256,7 @@ Implement scroll-triggered reveals using Intersection Observer or CSS scroll-tim
 For hero sections and immersive experiences, explore canvas-based effects: particle systems, noise-driven distortions, gradient mesh animations, or 3D transforms with perspective. Use requestAnimationFrame for smooth 60fps rendering.
 
 Performance is non-negotiable: profile GPU usage, avoid layout thrashing, use will-change sparingly, and implement progressive enhancement. Extraordinary experiences must degrade gracefully on lower-end devices and respect prefers-reduced-motion.`,
-    category: 'metier',
+    category: 'metiers',
     folder: 'motion',
   },
 
@@ -271,17 +271,17 @@ const FOLDER_DISPLAY_NAMES: Record<string, string> = {
   'graphisme': 'Graphisme',
   'ux-research': 'UX Research',
   'motion': 'Motion',
+  'energir': 'Énergir',
+  'bell': 'Bell',
 };
 
-const FOLDER_TYPES: Record<string, 'metier' | 'project'> = {
-  'design-ui': 'metier',
-  'graphisme': 'metier',
-  'ux-research': 'metier',
-  'motion': 'metier',
-  'energir': 'project',
-  'bell': 'project',
-  'desjardins': 'project',
-  'hydro-quebec': 'project',
+const FOLDER_TYPES: Record<string, 'metiers' | 'projects'> = {
+  'design-ui': 'metiers',
+  'graphisme': 'metiers',
+  'ux-research': 'metiers',
+  'motion': 'metiers',
+  'energir': 'projects',
+  'bell': 'projects',
 };
 
 const FOLDER_ORDER: string[] = [
@@ -291,8 +291,6 @@ const FOLDER_ORDER: string[] = [
   'motion',
   'energir',
   'bell',
-  'desjardins',
-  'hydro-quebec',
 ];
 
 const FOLDERS: Folder[] = FOLDER_ORDER.map((slug, index) => {
