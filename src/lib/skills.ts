@@ -260,108 +260,6 @@ Performance is non-negotiable: profile GPU usage, avoid layout thrashing, use wi
     folder: 'motion',
   },
 
-  // ===== energir (project) =====
-  {
-    slug: 'brand-guidelines',
-    name: 'Brand Guidelines \u00c9nergir',
-    description:
-      'Appliquer les guidelines de marque \u00c9nergir dans les interfaces',
-    tags: ['brand', 'guidelines', 'energir'],
-    author: '\u00c9quipe Design',
-    date: '2026-03-15',
-    color: 'orange',
-    content: `Respecter la charte graphique \u00c9nergir dans toutes les interfaces produites. La palette principale repose sur le orange \u00c9nergir (#F47920) comme couleur d\u2019accent, le bleu fonc\u00e9 (#1A3A5C) pour les \u00e9l\u00e9ments de confiance, et des gris neutres pour le contenu secondaire.
-
-Utiliser la typographie corporative (famille sans-serif) avec une hi\u00e9rarchie claire : titres en bold, sous-titres en medium, corps de texte en regular. Les tailles doivent suivre l\u2019\u00e9chelle d\u00e9finie dans le design system (14, 16, 18, 24, 32, 48px).
-
-Le ton de voix \u00c9nergir est chaleureux, accessible et professionnel. \u00c9viter le jargon technique dans les interfaces client. Privil\u00e9gier les formulations positives et orient\u00e9es vers l\u2019action.
-
-Tous les composants doivent int\u00e9grer le border-radius standard (8px), les ombres l\u00e9g\u00e8res pour la profondeur, et respecter les espacements du grid 8px. Valider la conformit\u00e9 avec l\u2019\u00e9quipe marque avant livraison.`,
-    category: 'project',
-    folder: 'energir',
-  },
-  {
-    slug: 'design-system',
-    name: 'Design System \u00c9nergir',
-    description:
-      'Composants et tokens du design system \u00c9nergir',
-    tags: ['design-system', 'components', 'tokens'],
-    author: '\u00c9quipe Design',
-    date: '2026-03-15',
-    color: 'blue',
-    content: `Utiliser les composants standardis\u00e9s du design system \u00c9nergir. Chaque composant poss\u00e8de des variantes document\u00e9es (primary, secondary, ghost, danger) et des tailles pr\u00e9d\u00e9finies (sm, md, lg). Ne jamais cr\u00e9er de composant ad hoc si un \u00e9quivalent existe dans le syst\u00e8me.
-
-Les design tokens sont organis\u00e9s en trois niveaux : primitives (couleurs brutes, tailles), semantiques (couleur-action-primary, spacing-section), et composants (button-padding, card-border-radius). Toujours r\u00e9f\u00e9rencer les tokens s\u00e9mantiques dans le code, jamais les valeurs brutes.
-
-Les composants principaux incluent : Button, Input, Select, Card, Modal, Toast, Table, Badge, Avatar, et Navigation. Chacun supporte les th\u00e8mes clair et sombre, les \u00e9tats interactifs (hover, focus, active, disabled), et les variantes responsive.
-
-Avant d\u2019ajouter un nouveau composant, v\u00e9rifier le registre existant et proposer une extension plut\u00f4t qu\u2019une cr\u00e9ation. Documenter toute nouvelle variante dans Storybook avec des exemples d\u2019utilisation et des guidelines d\u2019accessibilit\u00e9.`,
-    category: 'project',
-    folder: 'energir',
-  },
-
-  // ===== bell (project) =====
-  {
-    slug: 'accessibility',
-    name: 'Accessibilit\u00e9 Bell',
-    description:
-      'Standards d\u2019accessibilit\u00e9 WCAG pour les interfaces Bell',
-    tags: ['a11y', 'wcag', 'bell'],
-    author: '\u00c9quipe UX',
-    date: '2026-03-15',
-    color: 'blue',
-    content: `Toutes les interfaces Bell doivent respecter les normes WCAG 2.1 niveau AA minimum. Cela inclut un ratio de contraste de 4.5:1 pour le texte normal et 3:1 pour le texte large (18px+ bold ou 24px+ regular), ainsi que pour les \u00e9l\u00e9ments interactifs.
-
-Chaque \u00e9l\u00e9ment interactif doit \u00eatre navigable au clavier avec un indicateur de focus visible et un ordre de tabulation logique. Les formulaires requi\u00e8rent des labels explicites, des messages d\u2019erreur associ\u00e9s par aria-describedby, et des instructions claires pour chaque champ.
-
-Les images et ic\u00f4nes n\u00e9cessitent un texte alternatif descriptif (alt pour les images informatives, aria-hidden="true" pour les ic\u00f4nes d\u00e9coratives). Les composants dynamiques (modals, accord\u00e9ons, menus) doivent impl\u00e9menter les patterns ARIA correspondants avec gestion correcte du focus trap.
-
-Tester avec un lecteur d\u2019\u00e9cran (VoiceOver sur macOS, NVDA sur Windows) et l\u2019outil axe DevTools avant chaque livraison. Documenter les r\u00e9sultats d\u2019audit dans le rapport d\u2019accessibilit\u00e9 du projet.`,
-    category: 'project',
-    folder: 'bell',
-  },
-
-  // ===== desjardins (project) =====
-  {
-    slug: 'mobile-patterns',
-    name: 'Patterns Mobile Desjardins',
-    description:
-      'Patterns de navigation et d\u2019interaction mobile pour Desjardins',
-    tags: ['mobile', 'patterns', 'desjardins'],
-    author: '\u00c9quipe Mobile',
-    date: '2026-03-15',
-    color: 'green',
-    content: `Les interfaces mobiles Desjardins suivent une architecture de navigation par onglets (bottom tab bar) avec un maximum de 5 items. La navigation principale utilise les ic\u00f4nes standardis\u00e9es du design system avec labels textuels toujours visibles \u2014 jamais d\u2019ic\u00f4nes seules.
-
-Les interactions tactiles respectent les zones de confort : boutons principaux en bas de l\u2019\u00e9cran (zone du pouce), actions destructives prot\u00e9g\u00e9es par une confirmation modale, et gestes de swipe uniquement en compl\u00e9ment d\u2019actions visibles (jamais comme seul moyen d\u2019interaction).
-
-Les formulaires mobiles utilisent le clavier appropri\u00e9 par type de champ (num\u00e9rique pour les montants, email pour les adresses), le remplissage automatique quand possible, et la validation en temps r\u00e9el avec messages inline. Les \u00e9tapes longues sont d\u00e9coup\u00e9es en flux multi-\u00e9crans avec indicateur de progression.
-
-Optimiser pour les performances mobiles : lazy loading des images, squelettes de chargement pour les listes, et mise en cache agressive des donn\u00e9es fr\u00e9quemment consult\u00e9es. Tester sur les appareils de r\u00e9f\u00e9rence (iPhone SE, iPhone 15, Samsung Galaxy A54) avec des connexions r\u00e9seau simul\u00e9es (3G, 4G).`,
-    category: 'project',
-    folder: 'desjardins',
-  },
-
-  // ===== hydro-quebec (project) =====
-  {
-    slug: 'data-viz',
-    name: 'Data Visualization HQ',
-    description:
-      'Guidelines de visualisation de donn\u00e9es pour Hydro-Qu\u00e9bec',
-    tags: ['dataviz', 'charts', 'hydro-quebec'],
-    author: '\u00c9quipe Data',
-    date: '2026-03-15',
-    color: 'teal',
-    content: `Les visualisations de donn\u00e9es Hydro-Qu\u00e9bec privil\u00e9gient la clart\u00e9 et la pr\u00e9cision. Utiliser des graphiques en barres pour les comparaisons, des courbes pour les tendances temporelles, et des graphiques en aires empil\u00e9es pour les compositions \u00e9volutives. \u00c9viter les camemberts sauf pour 2-3 segments maximum.
-
-La palette de donn\u00e9es suit une progression s\u00e9quentielle du bleu clair au bleu fonc\u00e9 pour les valeurs continues, et une palette cat\u00e9gorielle de 6 couleurs distinctes pour les s\u00e9ries multiples. Chaque couleur doit rester diff\u00e9renciable en niveaux de gris pour l\u2019impression.
-
-Chaque graphique doit inclure : un titre descriptif (pas de titre g\u00e9n\u00e9rique comme "Graphique 1"), des axes clairement labellis\u00e9s avec unit\u00e9s, une l\u00e9gende positionn\u00e9e de mani\u00e8re coh\u00e9rente, et des annotations pour les points de donn\u00e9es remarquables (pics, anomalies, seuils).
-
-Impl\u00e9menter les graphiques avec D3.js ou Recharts selon le contexte technique. Assurer l\u2019accessibilit\u00e9 avec des descriptions textuelles alternatives, la navigation clavier entre les points de donn\u00e9es, et un tableau de donn\u00e9es accessible en alternative au graphique visuel.`,
-    category: 'project',
-    folder: 'hydro-quebec',
-  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -373,10 +271,6 @@ const FOLDER_DISPLAY_NAMES: Record<string, string> = {
   'graphisme': 'Graphisme',
   'ux-research': 'UX Research',
   'motion': 'Motion',
-  'energir': '\u00c9nergir',
-  'bell': 'Bell',
-  'desjardins': 'Desjardins',
-  'hydro-quebec': 'Hydro-Qu\u00e9bec',
 };
 
 const FOLDER_TYPES: Record<string, 'metier' | 'project'> = {
