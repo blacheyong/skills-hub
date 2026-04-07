@@ -47,7 +47,7 @@ export default function HomePage() {
         s.description.toLowerCase().includes(q) ||
         s.tags.some((t) => t.toLowerCase().includes(q))
     );
-  }, [q]);
+  }, [q, allSkills]);
 
   const filteredFolders = useMemo(() => {
     if (!q) return allFolders;

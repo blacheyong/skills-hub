@@ -24,7 +24,7 @@ function parseFrontmatter(content: string): { meta: Record<string, string | stri
     const colonIdx = line.indexOf(':');
     if (colonIdx === -1) continue;
     const key = line.slice(0, colonIdx).trim();
-    let value = line.slice(colonIdx + 1).trim();
+    const value = line.slice(colonIdx + 1).trim();
     // Parse array values like [tag1, tag2]
     if (value.startsWith('[') && value.endsWith(']')) {
       meta[key] = value.slice(1, -1).split(',').map(s => s.trim());

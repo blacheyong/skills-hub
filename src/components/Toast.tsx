@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface ToastProps {
   message: string;
@@ -11,19 +11,23 @@ interface ToastProps {
 
 export function Toast({ message, visible, onHide, duration = 2000 }: ToastProps) {
   const [show, setShow] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
+
+  // Sync show state with visible prop outside effect
+  if (!visible && show) {
+    setShow(false);
+  }
 
   useEffect(() => {
-    if (visible) {
-      // Trigger enter animation on next frame
-      requestAnimationFrame(() => setShow(true));
-      const timer = setTimeout(() => {
-        setShow(false);
-        setTimeout(onHide, 300);
-      }, duration);
-      return () => clearTimeout(timer);
-    } else {
+    if (!visible) return;
+    requestAnimationFrame(() => setShow(true));
+    timerRef.current = setTimeout(() => {
       setShow(false);
-    }
+      setTimeout(onHide, 300);
+    }, duration);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, [visible, duration, onHide]);
 
   if (!visible) return null;
