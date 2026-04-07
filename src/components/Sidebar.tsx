@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   Search,
   Folder,
@@ -9,10 +9,14 @@ import {
   Compass,
   Clapperboard,
   LogOut,
+  Menu,
+  X,
 } from 'lucide-react';
 import type { Folder as FolderType } from '@/lib/types';
 import { METIER_ICONS } from '@/lib/types';
 import { clickPulse } from '@/lib/animations';
+import { useIsMobile } from '@/lib/useIsMobile';
+import gsap from 'gsap';
 
 interface SidebarProps {
   folders: FolderType[];
@@ -21,7 +25,6 @@ interface SidebarProps {
   onLogout?: () => void;
 }
 
-/** Maps metier icon name to Lucide component */
 const ICON_MAP: Record<string, typeof Palette> = {
   palette: Palette,
   'pen-tool': PenTool,
@@ -39,11 +42,14 @@ function getMetierIcon(slug: string) {
 
 export function Sidebar({ folders, activeFolder, onFolderClick, onLogout }: SidebarProps) {
   const [searchValue, setSearchValue] = useState('');
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const isMobile = useIsMobile();
+  const drawerRef = useRef<HTMLElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   const projectFolders = folders.filter((f) => f.type === 'projects');
   const metierFolders = folders.filter((f) => f.type === 'metiers');
 
-  // Filter by search
   const filterFolders = (list: FolderType[]) => {
     if (!searchValue.trim()) return list;
     const q = searchValue.toLowerCase();
@@ -53,18 +59,57 @@ export function Sidebar({ folders, activeFolder, onFolderClick, onLogout }: Side
   const filteredProjects = filterFolders(projectFolders);
   const filteredMetiers = filterFolders(metierFolders);
 
-  return (
-    <aside
-      className="fixed left-0 top-0 flex h-full flex-col overflow-y-auto"
-      style={{
-        width: 240,
-        minWidth: 240,
-        background: '#f8f7f7',
-        borderRight: '1px solid rgba(0,0,0,0.04)',
-      }}
-    >
+  // Animate drawer open/close
+  useEffect(() => {
+    if (!isMobile) return;
+    const drawer = drawerRef.current;
+    const overlay = overlayRef.current;
+    if (!drawer || !overlay) return;
+
+    if (mobileOpen) {
+      gsap.to(overlay, { opacity: 1, duration: 0.25, ease: 'power2.out' });
+      gsap.to(drawer, { x: 0, duration: 0.3, ease: 'power3.out' });
+      overlay.style.pointerEvents = 'auto';
+    } else {
+      gsap.to(overlay, { opacity: 0, duration: 0.2, ease: 'power2.in' });
+      gsap.to(drawer, { x: -260, duration: 0.25, ease: 'power2.in' });
+      overlay.style.pointerEvents = 'none';
+    }
+  }, [mobileOpen, isMobile]);
+
+  const handleFolderClick = (slug: string) => {
+    onFolderClick(slug);
+    if (isMobile) setMobileOpen(false);
+  };
+
+  const sidebarContent = (
+    <>
+      {/* Mobile close button */}
+      {isMobile && (
+        <div className="flex items-center justify-between px-3 pt-3 pb-1">
+          <span style={{ fontSize: 14, fontWeight: 600, color: '#2e2e30', letterSpacing: '-0.02em' }}>
+            Skills Hub
+          </span>
+          <button
+            type="button"
+            onClick={() => setMobileOpen(false)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#8a8a8f',
+              display: 'flex',
+              padding: 4,
+              borderRadius: 6,
+            }}
+          >
+            <X size={18} />
+          </button>
+        </div>
+      )}
+
       {/* Search box */}
-      <div className="px-3 pt-4 pb-2">
+      <div className="px-3 pt-3 pb-2">
         <div
           className="relative flex items-center"
           style={{ background: 'rgba(0,0,0,0.03)', borderRadius: 7 }}
@@ -81,15 +126,16 @@ export function Sidebar({ folders, activeFolder, onFolderClick, onLogout }: Side
             placeholder="Rechercher..."
             className="w-full bg-transparent py-[6px] pl-8 pr-10 text-[13px] text-[#2e2e30] placeholder-[#b8b8bc] outline-none"
           />
-          <kbd className="absolute right-2 flex items-center gap-0.5 rounded-[4px] border border-black/[0.06] bg-white/60 px-1.5 py-[1px] text-[10px] font-medium text-[#b8b8bc] pointer-events-none">
-            <span className="text-[11px]">&#x2318;</span>K
-          </kbd>
+          {!isMobile && (
+            <kbd className="absolute right-2 flex items-center gap-0.5 rounded-[4px] border border-black/[0.06] bg-white/60 px-1.5 py-[1px] text-[10px] font-medium text-[#b8b8bc] pointer-events-none">
+              <span className="text-[11px]">&#x2318;</span>K
+            </kbd>
+          )}
         </div>
       </div>
 
       {/* Navigation sections */}
-      <nav className="flex-1 px-2 py-2">
-        {/* Skills Projet */}
+      <nav className="flex-1 px-2 py-2 overflow-y-auto">
         {filteredProjects.length > 0 && (
           <div className="mb-3">
             <SectionLabel>Skills Projet</SectionLabel>
@@ -99,7 +145,7 @@ export function Sidebar({ folders, activeFolder, onFolderClick, onLogout }: Side
                   key={folder.slug}
                   folder={folder}
                   isActive={activeFolder === folder.slug}
-                  onClick={() => onFolderClick(folder.slug)}
+                  onClick={() => handleFolderClick(folder.slug)}
                   icon={Folder}
                 />
               ))}
@@ -107,7 +153,6 @@ export function Sidebar({ folders, activeFolder, onFolderClick, onLogout }: Side
           </div>
         )}
 
-        {/* Skills Metier */}
         {filteredMetiers.length > 0 && (
           <div className="mb-3">
             <SectionLabel>Skills M&eacute;tier</SectionLabel>
@@ -117,7 +162,7 @@ export function Sidebar({ folders, activeFolder, onFolderClick, onLogout }: Side
                   key={folder.slug}
                   folder={folder}
                   isActive={activeFolder === folder.slug}
-                  onClick={() => onFolderClick(folder.slug)}
+                  onClick={() => handleFolderClick(folder.slug)}
                   icon={getMetierIcon(folder.slug)}
                 />
               ))}
@@ -126,7 +171,7 @@ export function Sidebar({ folders, activeFolder, onFolderClick, onLogout }: Side
         )}
       </nav>
 
-      {/* Bottom: New project button */}
+      {/* Bottom */}
       <div className="px-3 pb-4 pt-2">
         <button
           type="button"
@@ -137,6 +182,94 @@ export function Sidebar({ folders, activeFolder, onFolderClick, onLogout }: Side
           Se déconnecter
         </button>
       </div>
+    </>
+  );
+
+  // Mobile: hamburger + drawer
+  if (isMobile) {
+    return (
+      <>
+        {/* Mobile header bar */}
+        <header
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 52,
+            background: '#f8f7f7',
+            borderBottom: '1px solid rgba(0,0,0,0.05)',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0 16px',
+            gap: 12,
+            zIndex: 90,
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setMobileOpen(true)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#2e2e30',
+              display: 'flex',
+              padding: 4,
+            }}
+          >
+            <Menu size={22} strokeWidth={1.8} />
+          </button>
+          <span style={{ fontSize: 15, fontWeight: 600, color: '#2e2e30', letterSpacing: '-0.02em' }}>
+            Skills Hub
+          </span>
+        </header>
+
+        {/* Overlay */}
+        <div
+          ref={overlayRef}
+          onClick={() => setMobileOpen(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.2)',
+            backdropFilter: 'blur(2px)',
+            zIndex: 98,
+            opacity: 0,
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Drawer */}
+        <aside
+          ref={drawerRef}
+          className="fixed left-0 top-0 flex h-full flex-col"
+          style={{
+            width: 260,
+            background: '#f8f7f7',
+            zIndex: 99,
+            transform: 'translateX(-260px)',
+            boxShadow: '4px 0 24px rgba(0,0,0,0.08)',
+          }}
+        >
+          {sidebarContent}
+        </aside>
+      </>
+    );
+  }
+
+  // Desktop: fixed sidebar
+  return (
+    <aside
+      className="fixed left-0 top-0 flex h-full flex-col overflow-y-auto"
+      style={{
+        width: 240,
+        minWidth: 240,
+        background: '#f8f7f7',
+        borderRight: '1px solid rgba(0,0,0,0.04)',
+      }}
+    >
+      {sidebarContent}
     </aside>
   );
 }

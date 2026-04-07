@@ -7,6 +7,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { CopyButton } from "@/components/CopyButton";
 import { logout } from "@/lib/auth";
 import { loadData } from "@/lib/store";
+import { useIsMobile } from "@/lib/useIsMobile";
 import type { Skill, Folder } from "@/lib/types";
 import { useState, useEffect } from "react";
 
@@ -33,6 +34,7 @@ export default function SkillDetailPage() {
   const router = useRouter();
   const [allFolders, setAllFolders] = useState<Folder[]>([]);
   const [allSkills, setAllSkills] = useState<Skill[]>([]);
+  const isMobile = useIsMobile();
 
   const handleLogout = async () => {
     await logout();
@@ -71,8 +73,8 @@ export default function SkillDetailPage() {
         />
         <main
           style={{
-            marginLeft: 240,
-            padding: "28px 40px",
+            marginLeft: isMobile ? 0 : 240,
+            padding: isMobile ? "68px 16px 16px" : "28px 40px",
             flex: 1,
             display: "flex",
             alignItems: "center",

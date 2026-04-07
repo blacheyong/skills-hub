@@ -9,6 +9,7 @@ import { SearchBar } from "@/components/SearchBar";
 import { logout } from "@/lib/auth";
 import { loadData } from "@/lib/store";
 import { pageEnter } from "@/lib/animations";
+import { useIsMobile } from "@/lib/useIsMobile";
 import type { Skill, Folder } from "@/lib/types";
 
 export default function FolderPage() {
@@ -20,6 +21,7 @@ export default function FolderPage() {
 
   const slug = params.slug;
   const mainRef = useRef<HTMLElement>(null);
+  const isMobile = useIsMobile();
   const prevSlugRef = useRef<string>(slug);
 
   const handleLogout = async () => {
@@ -75,8 +77,8 @@ export default function FolderPage() {
         />
         <main
           style={{
-            marginLeft: 240,
-            padding: "28px 40px",
+            marginLeft: isMobile ? 0 : 240,
+            padding: isMobile ? "68px 16px 16px" : "28px 40px",
             flex: 1,
             display: "flex",
             alignItems: "center",

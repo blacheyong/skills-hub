@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { HelpCircle, ExternalLink } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
+import { useIsMobile } from "@/lib/useIsMobile";
 import { FolderCard } from "@/components/FolderCard";
 import { HelpModal } from "@/components/HelpModal";
 import { MoodSwitcher } from "@/components/MoodSwitcher";
@@ -21,6 +22,7 @@ export default function HomePage() {
   const [allSkills, setAllSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
   const [helpOpen, setHelpOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     loadData().then(({ skills, folders }) => {
@@ -77,8 +79,9 @@ export default function HomePage() {
 
       <main
         style={{
-          marginLeft: 240,
-          padding: "28px 40px",
+          marginLeft: isMobile ? 0 : 240,
+          paddingTop: isMobile ? 68 : 28,
+          padding: isMobile ? "68px 16px 16px" : "28px 40px",
           flex: 1,
           minWidth: 0,
         }}
