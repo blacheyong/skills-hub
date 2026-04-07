@@ -1,23 +1,24 @@
 'use client';
 
-import type { ReactNode } from 'react';
 import Link from 'next/link';
 import type { Skill } from '@/lib/types';
 
 interface SkillCardProps {
   skill: Skill;
   href: string;
-  copyButton?: ReactNode;
 }
 
-export function SkillCard({ skill, href, copyButton }: SkillCardProps) {
+export function SkillCard({ skill, href }: SkillCardProps) {
   return (
-    <div
-      className="group relative flex flex-col gap-3 bg-white p-4 outline-none"
+    <Link
+      href={href}
+      className="flex flex-col gap-3 bg-white p-4 outline-none no-underline"
       style={{
         borderRadius: 12,
         boxShadow: 'var(--card-shadow)',
         transition: 'all 0.25s cubic-bezier(0.23, 1, 0.32, 1)',
+        textDecoration: 'none',
+        color: 'inherit',
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translateY(-2px)';
@@ -28,27 +29,15 @@ export function SkillCard({ skill, href, copyButton }: SkillCardProps) {
         e.currentTarget.style.boxShadow = 'var(--card-shadow)';
       }}
     >
-      {/* Header: name + copy */}
-      <div className="flex items-start justify-between gap-2">
-        <Link
-          href={href}
-          style={{ fontSize: 14, fontWeight: 560, color: '#2e2e30', textDecoration: 'none', letterSpacing: '-0.01em' }}
-        >
-          {skill.name}
-        </Link>
-        {copyButton && (
-          <div className="shrink-0 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
-            {copyButton}
-          </div>
-        )}
-      </div>
+      {/* Name */}
+      <span style={{ fontSize: 14, fontWeight: 560, color: '#2e2e30', letterSpacing: '-0.01em' }}>
+        {skill.name}
+      </span>
 
       {/* Description (2 lines max) */}
-      <Link href={href} style={{ textDecoration: 'none' }}>
-        <p className="line-clamp-2" style={{ fontSize: 13, lineHeight: 1.45, color: '#8a8a8f' }}>
-          {skill.description}
-        </p>
-      </Link>
+      <p className="line-clamp-2" style={{ fontSize: 13, lineHeight: 1.45, color: '#8a8a8f', margin: 0 }}>
+        {skill.description}
+      </p>
 
       {/* Tags */}
       {skill.tags.length > 0 && (
@@ -77,7 +66,7 @@ export function SkillCard({ skill, href, copyButton }: SkillCardProps) {
         <span>{skill.author}</span>
         <span>{skill.date}</span>
       </div>
-    </div>
+    </Link>
   );
 }
 

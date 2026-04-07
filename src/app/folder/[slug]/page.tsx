@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillCard } from "@/components/SkillCard";
 import { SearchBar } from "@/components/SearchBar";
-import { CopyButton } from "@/components/CopyButton";
 import { loadData } from "@/lib/store";
 import type { Skill, Folder } from "@/lib/types";
 
@@ -198,11 +197,6 @@ export default function FolderPage() {
               key={skill.slug}
               skill={skill}
               href={`/folder/${slug}/${skill.slug}`}
-              copyButton={
-                <CopyButton
-                  text={`curl -sL https://raw.githubusercontent.com/guillonl/skills-library/main/${skill.category}/${slug}/${skill.slug}.md -o ~/.claude/skills/${skill.slug}.md`}
-                />
-              }
             />
           ))}
 
