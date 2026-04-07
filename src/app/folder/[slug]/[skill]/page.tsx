@@ -95,7 +95,7 @@ export default function SkillDetailPage() {
     );
   }
 
-  const installCommand = `claude skill install github.com/guillonl/skills-library/${skill.category}/${folderSlug}/${skill.slug}`;
+  const installCommand = `curl -sL https://raw.githubusercontent.com/guillonl/skills-library/main/${skill.category}/${folderSlug}/${skill.slug}.md -o ~/.claude/skills/${skill.slug}.md`;
   const repoUrl = `https://github.com/guillonl/skills-library/blob/main/${skill.category}/${folderSlug}/${skill.slug}.md`;
   const externalUrl = skill.source_url || null;
 

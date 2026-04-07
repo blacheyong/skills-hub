@@ -200,7 +200,7 @@ export default function FolderPage() {
               href={`/folder/${slug}/${skill.slug}`}
               copyButton={
                 <CopyButton
-                  text={`claude skill install github.com/guillonl/skills-library/${skill.category}/${slug}/${skill.slug}`}
+                  text={`curl -sL https://raw.githubusercontent.com/guillonl/skills-library/main/${skill.category}/${slug}/${skill.slug}.md -o ~/.claude/skills/${skill.slug}.md`}
                 />
               }
             />
