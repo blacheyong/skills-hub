@@ -146,7 +146,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
               Ajouter un skill
             </h2>
             <p style={{ fontSize: 12, color: '#a0a0a5', margin: 0, marginTop: 2 }}>
-              Avec Claude Code (recommande)
+              Avec Claude Code (recommandé)
             </p>
           </div>
         </div>
@@ -225,7 +225,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
           {/* Step 2: Prompts */}
           <div>
             <p style={{ fontSize: 14, fontWeight: 520, color: '#2e2e30', margin: 0, marginBottom: 10 }}>
-              Ensuite, dis simplement a Claude :
+              Ensuite, dis simplement à Claude :
             </p>
             <ul
               style={{
@@ -243,7 +243,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
                 <em style={{ color: '#7c6bc4' }}>&quot;Va chercher ce skill : [lien web]&quot;</em>
               </li>
               <li style={{ fontSize: 13, color: '#666', lineHeight: 1.5 }}>
-                <em style={{ color: '#7c6bc4' }}>&quot;Cree un skill a partir de cette page : [url]&quot;</em>
+                <em style={{ color: '#7c6bc4' }}>&quot;Crée un skill à partir de cette page : [url]&quot;</em>
               </li>
             </ul>
           </div>
@@ -267,7 +267,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
           }}
         >
           <p style={{ fontSize: 12, color: '#b8b8bc', margin: 0 }}>
-            Besoin d&apos;aide ? Demande a Leo
+            Besoin d&apos;aide ? Demande à Leo
           </p>
           <a
             href="https://github.com/blacheyong/skills-library"
