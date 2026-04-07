@@ -22,6 +22,14 @@ function displayName(slug: string): string {
   return map[slug] || slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ');
 }
 
+// Strip surrounding quotes from a string
+function stripQuotes(s: string): string {
+  if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
+    return s.slice(1, -1);
+  }
+  return s;
+}
+
 // Parse frontmatter from .md content
 function parseFrontmatter(content: string): { meta: Record<string, string | string[]>; body: string } {
   const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
@@ -34,9 +42,9 @@ function parseFrontmatter(content: string): { meta: Record<string, string | stri
     const key = line.slice(0, colonIdx).trim();
     const value = line.slice(colonIdx + 1).trim();
     if (value.startsWith('[') && value.endsWith(']')) {
-      meta[key] = value.slice(1, -1).split(',').map(s => s.trim());
+      meta[key] = value.slice(1, -1).split(',').map(s => stripQuotes(s.trim()));
     } else {
-      meta[key] = value;
+      meta[key] = stripQuotes(value);
     }
   }
   return { meta, body: match[2].trim() };
