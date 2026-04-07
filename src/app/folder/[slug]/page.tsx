@@ -20,6 +20,7 @@ export default function FolderPage() {
 
   const slug = params.slug;
   const mainRef = useRef<HTMLElement>(null);
+  const prevSlugRef = useRef<string>(slug);
 
   useEffect(() => {
     loadData().then(({ skills, folders }) => {
@@ -29,10 +30,11 @@ export default function FolderPage() {
     });
   }, []);
 
-  // GSAP: animate content when switching folders via sidebar
+  // GSAP: animate only when switching between folders via sidebar (not on first load)
   useEffect(() => {
-    if (!loading && folder) {
+    if (prevSlugRef.current !== slug) {
       pageEnter(mainRef.current);
+      prevSlugRef.current = slug;
     }
   }, [slug]);
 
