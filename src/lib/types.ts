@@ -30,4 +30,8 @@ export const METIER_ICONS: Record<string, string> = {
   'graphisme': 'pen-tool',
   'ux-research': 'compass',
   'motion': 'clapperboard',
+  'heuristiques': 'search-check',
+  'workshops': 'users',
+  'data-analytics': 'bar-chart-3',
+  'templates': 'file-text',
 };

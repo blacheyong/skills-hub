@@ -13,6 +13,10 @@ import {
   X,
   HelpCircle,
   ExternalLink,
+  SearchCheck,
+  Users,
+  BarChart3,
+  FileText,
 } from 'lucide-react';
 import type { Folder as FolderType } from '@/lib/types';
 import { METIER_ICONS } from '@/lib/types';
@@ -34,6 +38,10 @@ const ICON_MAP: Record<string, typeof Palette> = {
   'pen-tool': PenTool,
   compass: Compass,
   clapperboard: Clapperboard,
+  'search-check': SearchCheck,
+  users: Users,
+  'bar-chart-3': BarChart3,
+  'file-text': FileText,
 };
 
 function getMetierIcon(slug: string) {

@@ -19,6 +19,7 @@ function displayName(slug: string): string {
   const map: Record<string, string> = {
     'design-ui': 'Design UI',
     'ux-research': 'UX Research',
+    'data-analytics': 'Data Analytics',
     'hydro-quebec': 'Hydro-Qu\u00e9bec',
   };
   return map[slug] || slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ');
