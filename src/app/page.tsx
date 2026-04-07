@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { FolderCard } from "@/components/FolderCard";
-import { HelpModal } from "@/components/HelpModal";
 import { MoodSwitcher } from "@/components/MoodSwitcher";
 import { SearchBar } from "@/components/SearchBar";
 import { logout } from "@/lib/auth";
@@ -20,7 +19,6 @@ export default function HomePage() {
   const [allFolders, setAllFolders] = useState<Folder[]>([]);
   const [allSkills, setAllSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
-  const [helpOpen, setHelpOpen] = useState(false);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -72,7 +70,6 @@ export default function HomePage() {
         activeFolder={null}
         onFolderClick={(slug) => router.push(`/folder/${slug}`)}
         onLogout={handleLogout}
-        onHelpClick={() => setHelpOpen(true)}
       />
 
       {!isMobile && <MoodSwitcher mood={mood} onMoodChange={setMood} />}
@@ -234,7 +231,6 @@ export default function HomePage() {
         )}
       </main>
 
-      <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   );
 }

@@ -18,6 +18,7 @@ import type { Folder as FolderType } from '@/lib/types';
 import { METIER_ICONS } from '@/lib/types';
 import { clickPulse } from '@/lib/animations';
 import { useIsMobile } from '@/lib/useIsMobile';
+import { HelpModal } from '@/components/HelpModal';
 import gsap from 'gsap';
 
 interface SidebarProps {
@@ -46,6 +47,7 @@ function getMetierIcon(slug: string) {
 export function Sidebar({ folders, activeFolder, onFolderClick, onLogout, onHelpClick }: SidebarProps) {
   const [searchValue, setSearchValue] = useState('');
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const isMobile = useIsMobile();
   const drawerRef = useRef<HTMLElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -178,11 +180,11 @@ export function Sidebar({ folders, activeFolder, onFolderClick, onLogout, onHelp
       <div className="px-3 pb-4 pt-2" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
         <button
           type="button"
-          onClick={() => { onHelpClick?.(); if (isMobile) setMobileOpen(false); }}
+          onClick={() => { setHelpOpen(true); if (isMobile) setMobileOpen(false); }}
           className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-[13px] font-medium text-[#8a8a8f] transition-colors duration-150 hover:bg-black/[0.03] hover:text-[#2e2e30]"
         >
           <HelpCircle size={15} strokeWidth={1.8} />
-          Ajouter un skill
+          Comment ajouter un skill
         </button>
         <a
           href="https://github.com/blacheyong/skills-library"
@@ -276,23 +278,29 @@ export function Sidebar({ folders, activeFolder, onFolderClick, onLogout, onHelp
         >
           {sidebarContent}
         </aside>
+
+        <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
       </>
     );
   }
 
   // Desktop: fixed sidebar
   return (
-    <aside
-      className="fixed left-0 top-0 flex h-full flex-col overflow-y-auto"
-      style={{
-        width: 240,
-        minWidth: 240,
-        background: '#f8f7f7',
-        borderRight: '1px solid rgba(0,0,0,0.04)',
-      }}
-    >
-      {sidebarContent}
-    </aside>
+    <>
+      <aside
+        className="fixed left-0 top-0 flex h-full flex-col overflow-y-auto"
+        style={{
+          width: 240,
+          minWidth: 240,
+          background: '#f8f7f7',
+          borderRight: '1px solid rgba(0,0,0,0.04)',
+        }}
+      >
+        {sidebarContent}
+      </aside>
+
+      <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
+    </>
   );
 }
 
