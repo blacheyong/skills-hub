@@ -308,19 +308,31 @@ export default function SkillDetailPage() {
           </div>
 
           {/* Full content */}
-          <div
-            style={{
-              background: "#ffffff",
-              border: "1px solid rgba(0,0,0,0.06)",
-              borderRadius: 10,
-              padding: "28px",
-              fontSize: 14,
-              lineHeight: 1.75,
-              color: "#444",
-              whiteSpace: "pre-wrap",
-            }}
-          >
-            {skill.content}
+          <div style={{ position: "relative" }}>
+            <div
+              style={{
+                position: "absolute",
+                top: 12,
+                right: 12,
+                zIndex: 2,
+              }}
+            >
+              <CopyButton text={skill.content} />
+            </div>
+            <div
+              style={{
+                background: "#ffffff",
+                border: "1px solid rgba(0,0,0,0.06)",
+                borderRadius: 10,
+                padding: "28px",
+                fontSize: 14,
+                lineHeight: 1.75,
+                color: "#444",
+                whiteSpace: "pre-wrap",
+              }}
+            >
+              {skill.content}
+            </div>
           </div>
         </div>
       </main>
