@@ -176,29 +176,25 @@ export function Sidebar({ folders, activeFolder, onFolderClick, onLogout, onHelp
 
       {/* Bottom */}
       <div className="px-3 pb-4 pt-2" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-        {isMobile && (
-          <>
-            <button
-              type="button"
-              onClick={() => { onHelpClick?.(); setMobileOpen(false); }}
-              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-[13px] font-medium text-[#8a8a8f] transition-colors duration-150 hover:bg-black/[0.03] hover:text-[#2e2e30]"
-            >
-              <HelpCircle size={15} strokeWidth={1.8} />
-              Ajouter un skill
-            </button>
-            <a
-              href="https://github.com/blacheyong/skills-library"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-[13px] font-medium text-[#8a8a8f] transition-colors duration-150 hover:bg-black/[0.03] hover:text-[#2e2e30]"
-              style={{ textDecoration: 'none' }}
-            >
-              <ExternalLink size={15} strokeWidth={1.8} />
-              GitHub
-            </a>
-            <div style={{ height: 1, background: 'rgba(0,0,0,0.04)', margin: '4px 0' }} />
-          </>
-        )}
+        <button
+          type="button"
+          onClick={() => { onHelpClick?.(); if (isMobile) setMobileOpen(false); }}
+          className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-[13px] font-medium text-[#8a8a8f] transition-colors duration-150 hover:bg-black/[0.03] hover:text-[#2e2e30]"
+        >
+          <HelpCircle size={15} strokeWidth={1.8} />
+          Ajouter un skill
+        </button>
+        <a
+          href="https://github.com/blacheyong/skills-library"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-[13px] font-medium text-[#8a8a8f] transition-colors duration-150 hover:bg-black/[0.03] hover:text-[#2e2e30]"
+          style={{ textDecoration: 'none' }}
+        >
+          <ExternalLink size={15} strokeWidth={1.8} />
+          GitHub
+        </a>
+        <div style={{ height: 1, background: 'rgba(0,0,0,0.04)', margin: '4px 0' }} />
         <button
           type="button"
           onClick={onLogout}
