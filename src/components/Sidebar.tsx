@@ -343,6 +343,7 @@ function NavItem({ folder, isActive, onClick, icon: Icon }: NavItemProps) {
           gap: 9,
           padding: '6px 8px',
           borderRadius: 6,
+          cursor: 'pointer',
           fontSize: 14,
           fontWeight: isActive ? 480 : 440,
           color: isActive ? '#2e2e30' : '#8a8a8f',
