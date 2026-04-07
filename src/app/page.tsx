@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, Github } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
 import { FolderCard } from "@/components/FolderCard";
 import { HelpModal } from "@/components/HelpModal";
@@ -139,6 +139,40 @@ export default function HomePage() {
               <HelpCircle size={14} strokeWidth={2} />
               Ajouter un skill
             </button>
+            <a
+              href="https://github.com/blacheyong/skills-library"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+                padding: "4px 10px 4px 7px",
+                background: "rgba(0,0,0,0.03)",
+                border: "1px solid rgba(0,0,0,0.05)",
+                borderRadius: 7,
+                color: "#a0a0a5",
+                fontSize: 12,
+                fontWeight: 480,
+                fontFamily: "inherit",
+                letterSpacing: "-0.01em",
+                textDecoration: "none",
+                transition: "all 0.2s cubic-bezier(0.23, 1, 0.32, 1)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(0,0,0,0.06)";
+                e.currentTarget.style.borderColor = "rgba(0,0,0,0.1)";
+                e.currentTarget.style.color = "#2e2e30";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(0,0,0,0.03)";
+                e.currentTarget.style.borderColor = "rgba(0,0,0,0.05)";
+                e.currentTarget.style.color = "#a0a0a5";
+              }}
+            >
+              <Github size={14} strokeWidth={2} />
+              GitHub
+            </a>
           </div>
           <SearchBar
             value={search}
