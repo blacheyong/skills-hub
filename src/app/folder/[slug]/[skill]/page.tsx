@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
 import { CopyButton } from "@/components/CopyButton";
+import { logout } from "@/lib/auth";
 import { loadData } from "@/lib/store";
 import type { Skill, Folder } from "@/lib/types";
 import { useState, useEffect } from "react";
@@ -32,13 +33,17 @@ export default function SkillDetailPage() {
   const router = useRouter();
   const [allFolders, setAllFolders] = useState<Folder[]>([]);
   const [allSkills, setAllSkills] = useState<Skill[]>([]);
-  const [loading, setLoading] = useState(true);
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/login");
+    router.refresh();
+  };
 
   useEffect(() => {
     loadData().then(({ skills, folders }) => {
       setAllSkills(skills);
       setAllFolders(folders);
-      setLoading(false);
     });
   }, []);
 
@@ -62,7 +67,7 @@ export default function SkillDetailPage() {
           folders={allFolders}
           activeFolder={null}
           onFolderClick={(s) => router.push(`/folder/${s}`)}
-          onLogout={() => router.push("/login")}
+          onLogout={handleLogout}
         />
         <main
           style={{
@@ -112,7 +117,7 @@ export default function SkillDetailPage() {
         folders={allFolders}
         activeFolder={folderSlug}
         onFolderClick={(s) => router.push(`/folder/${s}`)}
-          onLogout={() => router.push("/login")}
+        onLogout={handleLogout}
       />
 
       <main

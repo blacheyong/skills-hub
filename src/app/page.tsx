@@ -9,7 +9,7 @@ import { FolderCard } from "@/components/FolderCard";
 import { HelpModal } from "@/components/HelpModal";
 import { MoodSwitcher } from "@/components/MoodSwitcher";
 import { SearchBar } from "@/components/SearchBar";
-import { isAuthenticated, logout } from "@/lib/auth";
+import { logout } from "@/lib/auth";
 import { loadData } from "@/lib/store";
 import type { Skill, Folder, MoodPalette } from "@/lib/types";
 
@@ -23,17 +23,17 @@ export default function HomePage() {
   const [helpOpen, setHelpOpen] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated()) { router.push("/login"); return; }
     loadData().then(({ skills, folders }) => {
       setAllSkills(skills);
       setAllFolders(folders);
       setLoading(false);
     });
-  }, [router]);
+  }, []);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     router.push("/login");
+    router.refresh();
   };
 
   const q = search.toLowerCase().trim();

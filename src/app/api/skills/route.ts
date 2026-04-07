@@ -1,4 +1,6 @@
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { AUTH_COOKIE_NAME, isValidSessionToken } from '@/lib/auth-server';
 import type { Skill, Folder } from '@/lib/types';
 
 const REPO_OWNER = 'guillonl';
@@ -35,6 +37,12 @@ function parseFrontmatter(content: string): { meta: Record<string, string | stri
 }
 
 export async function GET() {
+  const sessionToken = (await cookies()).get(AUTH_COOKIE_NAME)?.value;
+
+  if (!isValidSessionToken(sessionToken)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const skills: Skill[] = [];
   const folderMap = new Map<string, { type: 'metiers' | 'projects'; skills: number; color: string }>();
 

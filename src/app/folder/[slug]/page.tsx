@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillCard } from "@/components/SkillCard";
 import { SearchBar } from "@/components/SearchBar";
+import { logout } from "@/lib/auth";
 import { loadData } from "@/lib/store";
 import { pageEnter } from "@/lib/animations";
 import type { Skill, Folder } from "@/lib/types";
@@ -16,17 +17,21 @@ export default function FolderPage() {
   const [search, setSearch] = useState("");
   const [allFolders, setAllFolders] = useState<Folder[]>([]);
   const [allSkills, setAllSkills] = useState<Skill[]>([]);
-  const [loading, setLoading] = useState(true);
 
   const slug = params.slug;
   const mainRef = useRef<HTMLElement>(null);
   const prevSlugRef = useRef<string>(slug);
 
+  const handleLogout = async () => {
+    await logout();
+    router.push("/login");
+    router.refresh();
+  };
+
   useEffect(() => {
     loadData().then(({ skills, folders }) => {
       setAllSkills(skills);
       setAllFolders(folders);
-      setLoading(false);
     });
   }, []);
 
@@ -66,7 +71,7 @@ export default function FolderPage() {
           folders={allFolders}
           activeFolder={null}
           onFolderClick={(s) => router.push(`/folder/${s}`)}
-          onLogout={() => router.push("/login")}
+          onLogout={handleLogout}
         />
         <main
           style={{
@@ -112,7 +117,7 @@ export default function FolderPage() {
         folders={allFolders}
         activeFolder={slug}
         onFolderClick={(s) => router.push(`/folder/${s}`)}
-          onLogout={() => router.push("/login")}
+        onLogout={handleLogout}
       />
 
       <main

@@ -11,7 +11,20 @@ export async function loadData(): Promise<{ skills: Skill[]; folders: Folder[] }
 
   if (!fetchPromise) {
     fetchPromise = fetch('/api/skills')
-      .then((res) => res.json())
+      .then(async (res) => {
+        if (res.status === 401) {
+          if (typeof window !== 'undefined') {
+            window.location.assign('/login');
+          }
+          throw new Error('Unauthorized');
+        }
+
+        if (!res.ok) {
+          throw new Error(`Failed to load skills: ${res.status}`);
+        }
+
+        return res.json();
+      })
       .then(({ skills, folders }) => {
         cachedSkills = skills;
         cachedFolders = folders;

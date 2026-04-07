@@ -3,9 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Zap, Eye, EyeOff } from "lucide-react";
-
-const VALID_USER = "design";
-const VALID_PASS = "skills2026";
+import { login } from "@/lib/auth";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -13,14 +11,30 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const getRedirectTarget = () => {
+    if (typeof window === "undefined") {
+      return "/";
+    }
+
+    const nextPath = new URLSearchParams(window.location.search).get("next");
+    return nextPath && nextPath.startsWith("/") && !nextPath.startsWith("//") ? nextPath : "/";
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === VALID_USER && password === VALID_PASS) {
-      localStorage.setItem("skills-hub-auth", "true");
-      router.push("/");
-    } else {
-      setError("Identifiants incorrects");
+
+    setSubmitting(true);
+
+    try {
+      await login(username, password);
+      router.push(getRedirectTarget());
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Identifiants incorrects");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -161,10 +175,11 @@ export default function LoginPage() {
         {/* Submit */}
         <button
           type="submit"
+          disabled={submitting}
           style={{
             width: "100%",
             height: 42,
-            background: "#2e2e30",
+            background: submitting ? "#666" : "#2e2e30",
             color: "#fff",
             borderRadius: 10,
             fontSize: 14,
@@ -175,10 +190,10 @@ export default function LoginPage() {
             fontFamily: "inherit",
             transition: "background 0.15s",
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = "#444"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = "#2e2e30"; }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = submitting ? "#666" : "#444"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = submitting ? "#666" : "#2e2e30"; }}
         >
-          Se connecter
+          {submitting ? "Connexion..." : "Se connecter"}
         </button>
 
         <p style={{ fontSize: 11, color: "#c2c2c6", margin: 0, textAlign: "center", lineHeight: 1.5 }}>
