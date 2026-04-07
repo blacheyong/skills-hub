@@ -195,7 +195,7 @@ export default function HomePage() {
           className={`pal-${mood}`}
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))",
+            gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(190px, 1fr))",
             gap: 14,
           }}
         >
@@ -225,7 +225,7 @@ export default function HomePage() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+                gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(280px, 1fr))",
                 gap: 12,
               }}
             >

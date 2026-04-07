@@ -124,10 +124,11 @@ export default function SkillDetailPage() {
 
       <main
         style={{
-          marginLeft: 240,
-          padding: "28px 40px",
+          marginLeft: isMobile ? 0 : 240,
+          padding: isMobile ? "68px 16px 16px" : "28px 40px",
           flex: 1,
           minWidth: 0,
+          overflowX: "hidden",
         }}
       >
         {/* Breadcrumb */}

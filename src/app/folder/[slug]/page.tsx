@@ -125,8 +125,8 @@ export default function FolderPage() {
       <main
         ref={mainRef}
         style={{
-          marginLeft: 240,
-          padding: "28px 40px",
+          marginLeft: isMobile ? 0 : 240,
+          padding: isMobile ? "68px 16px 16px" : "28px 40px",
           flex: 1,
           minWidth: 0,
         }}
@@ -166,10 +166,11 @@ export default function FolderPage() {
         <div
           style={{
             display: "flex",
-            alignItems: "center",
+            flexDirection: isMobile ? "column" : "row",
+            alignItems: isMobile ? "stretch" : "center",
             justifyContent: "space-between",
             marginBottom: 28,
-            gap: 16,
+            gap: isMobile ? 12 : 16,
           }}
         >
           <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
@@ -207,7 +208,7 @@ export default function FolderPage() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+            gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(280px, 1fr))",
             gap: 16,
           }}
         >
