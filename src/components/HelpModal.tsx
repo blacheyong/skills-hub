@@ -238,6 +238,20 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
           <p style={{ fontSize: 13, color: '#8a8a8f', margin: 0, lineHeight: 1.5 }}>
             Claude va le formater et le push automatiquement.
           </p>
+
+          {/* Prerequisite */}
+          <p style={{ fontSize: 12, color: '#b8b8bc', margin: 0, lineHeight: 1.5, fontStyle: 'italic' }}>
+            Tu dois avoir acces au repo{' '}
+            <a
+              href="https://github.com/blacheyong/skills-library"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#7c6bc4', textDecoration: 'none' }}
+            >
+              blacheyong/skills-library
+            </a>
+            {' '}sur GitHub pour pouvoir ajouter des skills.
+          </p>
         </div>
 
         {/* Footer */}
