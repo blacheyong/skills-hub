@@ -208,6 +208,20 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
             </div>
           </div>
 
+          {/* Repo access note */}
+          <p style={{ fontSize: 12, color: '#b8b8bc', margin: 0, lineHeight: 1.5 }}>
+            Connecte-toi au repo{' '}
+            <a
+              href="https://github.com/blacheyong/skills-library"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#7c6bc4', textDecoration: 'none' }}
+            >
+              skills-library
+            </a>
+            {' '}pour pouvoir push tes skills.
+          </p>
+
           {/* Step 2: Prompts */}
           <div>
             <p style={{ fontSize: 14, fontWeight: 520, color: '#2e2e30', margin: 0, marginBottom: 10 }}>
@@ -239,19 +253,6 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
             Claude va le formater et le push automatiquement.
           </p>
 
-          {/* Prerequisite */}
-          <p style={{ fontSize: 12, color: '#b8b8bc', margin: 0, lineHeight: 1.5, fontStyle: 'italic' }}>
-            Tu dois avoir acces au repo{' '}
-            <a
-              href="https://github.com/blacheyong/skills-library"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: '#7c6bc4', textDecoration: 'none' }}
-            >
-              blacheyong/skills-library
-            </a>
-            {' '}sur GitHub pour pouvoir ajouter des skills.
-          </p>
         </div>
 
         {/* Footer */}
