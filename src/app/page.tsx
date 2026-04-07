@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { HelpCircle, Github } from "lucide-react";
+import { HelpCircle, ExternalLink } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
 import { FolderCard } from "@/components/FolderCard";
 import { HelpModal } from "@/components/HelpModal";
@@ -170,7 +170,7 @@ export default function HomePage() {
                 e.currentTarget.style.color = "#a0a0a5";
               }}
             >
-              <Github size={14} strokeWidth={2} />
+              <ExternalLink size={14} strokeWidth={2} />
               GitHub
             </a>
           </div>
