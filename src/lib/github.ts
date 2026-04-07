@@ -1,6 +1,6 @@
 import type { Skill, Folder } from '@/lib/types';
 
-const REPO_OWNER = 'guillonl';
+const REPO_OWNER = 'blacheyong';
 const REPO_NAME = 'skills-library';
 const BRANCH = 'main';
 const API_BASE = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
@@ -127,12 +127,10 @@ export async function fetchSkillsFromGitHub(): Promise<{ skills: Skill[]; folder
     skills.push(...results.filter((s): s is Skill => s !== null));
   } catch (error) {
     console.error('Failed to fetch skills from GitHub:', error);
-    // Return empty — the UI will show "no skills found"
   }
 
   // Build folders from the map
   const folderEntries = Array.from(folderMap.entries());
-  // Sort: metiers first, then projects
   folderEntries.sort((a, b) => {
     if (a[1].type !== b[1].type) return a[1].type === 'metiers' ? -1 : 1;
     return a[0].localeCompare(b[0]);

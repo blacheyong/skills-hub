@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { AUTH_COOKIE_NAME, isValidSessionToken } from '@/lib/auth-server';
 import type { Skill, Folder } from '@/lib/types';
 
-const REPO_OWNER = 'guillonl';
+const REPO_OWNER = 'blacheyong';
 const REPO_NAME = 'skills-library';
 const BRANCH = 'main';
 const API_BASE = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
@@ -12,7 +12,7 @@ function displayName(slug: string): string {
   const map: Record<string, string> = {
     'design-ui': 'Design UI',
     'ux-research': 'UX Research',
-    'hydro-quebec': 'Hydro-Québec',
+    'hydro-quebec': 'Hydro-Qu\u00e9bec',
   };
   return map[slug] || slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ');
 }

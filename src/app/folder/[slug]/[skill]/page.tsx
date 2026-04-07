@@ -100,8 +100,8 @@ export default function SkillDetailPage() {
     );
   }
 
-  const installCommand = `curl -sL https://raw.githubusercontent.com/guillonl/skills-library/main/${skill.category}/${folderSlug}/${skill.slug}.md -o ~/.claude/skills/${skill.slug}.md`;
-  const repoUrl = `https://github.com/guillonl/skills-library/blob/main/${skill.category}/${folderSlug}/${skill.slug}.md`;
+  const installCommand = `curl -sL https://raw.githubusercontent.com/blacheyong/skills-library/main/${skill.category}/${folderSlug}/${skill.slug}.md -o ~/.claude/skills/${skill.slug}.md`;
+  const repoUrl = `https://github.com/blacheyong/skills-library/blob/main/${skill.category}/${folderSlug}/${skill.slug}.md`;
   const externalUrl = skill.source_url || null;
 
   return (
@@ -128,7 +128,7 @@ export default function SkillDetailPage() {
           minWidth: 0,
         }}
       >
-        {/* Breadcrumb — stays left-aligned */}
+        {/* Breadcrumb */}
         <nav
           style={{
             display: "flex",
@@ -178,7 +178,7 @@ export default function SkillDetailPage() {
 
         {/* Centered content area */}
         <div style={{ maxWidth: 680, margin: "0 auto" }}>
-          {/* Title row: title + GitHub link */}
+          {/* Title row */}
           <div
             style={{
               display: "flex",

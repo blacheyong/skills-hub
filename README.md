@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Skills Hub
 
-## Getting Started
+Plateforme interne de skills Claude Code pour l'equipe Blache Yong.
 
-First, run the development server:
+Le hub affiche automatiquement les skills depuis le repo [skills-library](https://github.com/blacheyong/skills-library).
+
+---
+
+## Lancer en local
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ouvrir [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Ajouter un skill
 
-## Learn More
+### Option 1 : Avec Claude Code (recommande)
 
-To learn more about Next.js, take a look at the following resources:
+Installe le skill "add-skill" dans Claude Code :
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+curl -sL https://raw.githubusercontent.com/blacheyong/skills-library/main/skills/add-skill.md -o ~/.claude/commands/add-skill.md
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Ensuite, dis simplement a Claude :
+- *"Ajoute ce skill dans Design UI"* + colle le contenu
+- *"Va chercher ce skill : [lien web]"*
+- *"Cree un skill a partir de cette page : [url]"*
 
-## Deploy on Vercel
+Claude va le formater et le push automatiquement.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Option 2 : Manuellement sur GitHub
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Va dans le repo [skills-library](https://github.com/blacheyong/skills-library)
+2. Cree un fichier `.md` dans le bon dossier (`metiers/` ou `projects/`)
+3. Ajoute le frontmatter requis (name, description, tags, author, date, color)
+4. Commit sur main — le skill apparait automatiquement sur le hub
+
+---
+
+## Architecture
+
+- **skills-hub** (ce repo) — App Next.js qui affiche les skills
+- **[skills-library](https://github.com/blacheyong/skills-library)** — Fichiers `.md` des skills
+
+L'app fetch les skills depuis l'API GitHub du repo skills-library.
+
+---
+
+## Stack
+
+- Next.js 16 + React 19
+- Tailwind CSS 4
+- GSAP (animations)
+- TypeScript

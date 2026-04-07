@@ -10,7 +10,7 @@ interface HelpModalProps {
 }
 
 const INSTALL_CMD =
-  'curl -sL https://raw.githubusercontent.com/guillonl/skills-library/main/skills/add-skill.md -o ~/.claude/commands/add-skill.md';
+  'curl -sL https://raw.githubusercontent.com/blacheyong/skills-library/main/skills/add-skill.md -o ~/.claude/commands/add-skill.md';
 
 export function HelpModal({ open, onClose }: HelpModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -255,7 +255,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
             Besoin d&apos;aide ? Demande a Leo
           </p>
           <a
-            href="https://github.com/guillonl/skills-library"
+            href="https://github.com/blacheyong/skills-library"
             target="_blank"
             rel="noopener noreferrer"
             style={{
