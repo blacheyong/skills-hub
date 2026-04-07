@@ -349,6 +349,18 @@ function NavItem({ folder, isActive, onClick, icon: Icon }: NavItemProps) {
           color: isActive ? '#2e2e30' : '#8a8a8f',
           background: isActive ? 'rgba(0,0,0,0.045)' : 'transparent',
         }}
+        onMouseEnter={(e) => {
+          if (!isActive) {
+            e.currentTarget.style.background = 'rgba(0,0,0,0.03)';
+            e.currentTarget.style.color = '#2e2e30';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isActive) {
+            e.currentTarget.style.background = 'transparent';
+            e.currentTarget.style.color = '#8a8a8f';
+          }
+        }}
       >
         <Icon
           size={18}
