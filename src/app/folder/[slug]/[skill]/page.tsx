@@ -6,8 +6,9 @@ import { ExternalLink } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
 import { CopyButton } from "@/components/CopyButton";
 import { loadData } from "@/lib/store";
+import { pageEnter } from "@/lib/animations";
 import type { Skill, Folder } from "@/lib/types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const TAG_COLORS: Record<string, { bg: string; text: string }> = {
   design: { bg: "#f0e6ff", text: "#7c3aed" },
@@ -34,6 +35,8 @@ export default function SkillDetailPage() {
   const [allSkills, setAllSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const mainRef = useRef<HTMLElement>(null);
+
   useEffect(() => {
     loadData().then(({ skills, folders }) => {
       setAllSkills(skills);
@@ -41,6 +44,13 @@ export default function SkillDetailPage() {
       setLoading(false);
     });
   }, []);
+
+  // GSAP: animate content on navigation
+  useEffect(() => {
+    if (!loading && skill) {
+      pageEnter(mainRef.current);
+    }
+  }, [loading]);
 
   const folderSlug = params.slug;
   const skillSlug = params.skill;
@@ -116,6 +126,7 @@ export default function SkillDetailPage() {
       />
 
       <main
+        ref={mainRef}
         style={{
           marginLeft: 240,
           padding: "28px 40px",

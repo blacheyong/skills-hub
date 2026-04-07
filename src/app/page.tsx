@@ -3,8 +3,10 @@
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { HelpCircle } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
 import { FolderCard } from "@/components/FolderCard";
+import { HelpModal } from "@/components/HelpModal";
 import { MoodSwitcher } from "@/components/MoodSwitcher";
 import { SearchBar } from "@/components/SearchBar";
 import { isAuthenticated, logout } from "@/lib/auth";
@@ -18,6 +20,7 @@ export default function HomePage() {
   const [allFolders, setAllFolders] = useState<Folder[]>([]);
   const [allSkills, setAllSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated()) { router.push("/login"); return; }
@@ -89,18 +92,54 @@ export default function HomePage() {
             gap: 16,
           }}
         >
-          <h1
-            style={{
-              fontSize: 18,
-              fontWeight: 620,
-              letterSpacing: "-0.02em",
-              color: "#2e2e30",
-              margin: 0,
-              whiteSpace: "nowrap",
-            }}
-          >
-            Tous les skills
-          </h1>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <h1
+              style={{
+                fontSize: 18,
+                fontWeight: 620,
+                letterSpacing: "-0.02em",
+                color: "#2e2e30",
+                margin: 0,
+                whiteSpace: "nowrap",
+              }}
+            >
+              Tous les skills
+            </h1>
+            <button
+              type="button"
+              onClick={() => setHelpOpen(true)}
+              title="Comment ajouter un skill"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+                padding: "4px 10px 4px 7px",
+                background: "rgba(0,0,0,0.03)",
+                border: "1px solid rgba(0,0,0,0.05)",
+                borderRadius: 7,
+                cursor: "pointer",
+                color: "#a0a0a5",
+                fontSize: 12,
+                fontWeight: 480,
+                fontFamily: "inherit",
+                letterSpacing: "-0.01em",
+                transition: "all 0.2s cubic-bezier(0.23, 1, 0.32, 1)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(124, 107, 196, 0.08)";
+                e.currentTarget.style.borderColor = "rgba(124, 107, 196, 0.2)";
+                e.currentTarget.style.color = "#7c6bc4";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(0,0,0,0.03)";
+                e.currentTarget.style.borderColor = "rgba(0,0,0,0.05)";
+                e.currentTarget.style.color = "#a0a0a5";
+              }}
+            >
+              <HelpCircle size={14} strokeWidth={2} />
+              Ajouter un skill
+            </button>
+          </div>
           <SearchBar
             value={search}
             onChange={setSearch}
@@ -225,6 +264,8 @@ export default function HomePage() {
         </>
         )}
       </main>
+
+      <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   );
 }

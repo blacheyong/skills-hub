@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillCard } from "@/components/SkillCard";
 import { SearchBar } from "@/components/SearchBar";
 import { loadData } from "@/lib/store";
+import { pageEnter } from "@/lib/animations";
 import type { Skill, Folder } from "@/lib/types";
 
 export default function FolderPage() {
@@ -18,6 +19,7 @@ export default function FolderPage() {
   const [loading, setLoading] = useState(true);
 
   const slug = params.slug;
+  const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     loadData().then(({ skills, folders }) => {
@@ -26,6 +28,13 @@ export default function FolderPage() {
       setLoading(false);
     });
   }, []);
+
+  // GSAP: animate content when switching folders via sidebar
+  useEffect(() => {
+    if (!loading && folder) {
+      pageEnter(mainRef.current);
+    }
+  }, [slug]);
 
   const folder = allFolders.find((f) => f.slug === slug);
   const skills = allSkills.filter((s) => s.folder === slug);
@@ -105,6 +114,7 @@ export default function FolderPage() {
       />
 
       <main
+        ref={mainRef}
         style={{
           marginLeft: 240,
           padding: "28px 40px",

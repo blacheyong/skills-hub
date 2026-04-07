@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   Search,
   Folder,
@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import type { Folder as FolderType } from '@/lib/types';
 import { METIER_ICONS } from '@/lib/types';
+import { clickPulse } from '@/lib/animations';
 
 interface SidebarProps {
   folders: FolderType[];
@@ -169,11 +170,19 @@ interface NavItemProps {
 }
 
 function NavItem({ folder, isActive, onClick, icon: Icon }: NavItemProps) {
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  const handleClick = () => {
+    clickPulse(btnRef.current);
+    onClick();
+  };
+
   return (
     <li>
       <button
+        ref={btnRef}
         type="button"
-        onClick={onClick}
+        onClick={handleClick}
         className="flex w-full items-center text-left transition-colors duration-150"
         style={{
           gap: 9,
