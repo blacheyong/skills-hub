@@ -73,9 +73,10 @@ export default function HomePage() {
         activeFolder={null}
         onFolderClick={(slug) => router.push(`/folder/${slug}`)}
         onLogout={handleLogout}
+        onHelpClick={() => setHelpOpen(true)}
       />
 
-      <MoodSwitcher mood={mood} onMoodChange={setMood} />
+      {!isMobile && <MoodSwitcher mood={mood} onMoodChange={setMood} />}
 
       <main
         style={{
@@ -98,7 +99,7 @@ export default function HomePage() {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <h1
               style={{
-                fontSize: 18,
+                fontSize: isMobile ? 16 : 18,
                 fontWeight: 620,
                 letterSpacing: "-0.02em",
                 color: "#2e2e30",
@@ -108,74 +109,78 @@ export default function HomePage() {
             >
               Tous les skills
             </h1>
-            <button
-              type="button"
-              onClick={() => setHelpOpen(true)}
-              title="Comment ajouter un skill"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 5,
-                padding: "4px 10px 4px 7px",
-                background: "rgba(0,0,0,0.03)",
-                border: "1px solid rgba(0,0,0,0.05)",
-                borderRadius: 7,
-                cursor: "pointer",
-                color: "#a0a0a5",
-                fontSize: 12,
-                fontWeight: 480,
-                fontFamily: "inherit",
-                letterSpacing: "-0.01em",
-                transition: "all 0.2s cubic-bezier(0.23, 1, 0.32, 1)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(124, 107, 196, 0.08)";
-                e.currentTarget.style.borderColor = "rgba(124, 107, 196, 0.2)";
-                e.currentTarget.style.color = "#7c6bc4";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "rgba(0,0,0,0.03)";
-                e.currentTarget.style.borderColor = "rgba(0,0,0,0.05)";
-                e.currentTarget.style.color = "#a0a0a5";
-              }}
-            >
-              <HelpCircle size={14} strokeWidth={2} />
-              Ajouter un skill
-            </button>
-            <a
-              href="https://github.com/blacheyong/skills-library"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 5,
-                padding: "4px 10px 4px 7px",
-                background: "rgba(0,0,0,0.03)",
-                border: "1px solid rgba(0,0,0,0.05)",
-                borderRadius: 7,
-                color: "#a0a0a5",
-                fontSize: 12,
-                fontWeight: 480,
-                fontFamily: "inherit",
-                letterSpacing: "-0.01em",
-                textDecoration: "none",
-                transition: "all 0.2s cubic-bezier(0.23, 1, 0.32, 1)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(0,0,0,0.06)";
-                e.currentTarget.style.borderColor = "rgba(0,0,0,0.1)";
-                e.currentTarget.style.color = "#2e2e30";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "rgba(0,0,0,0.03)";
-                e.currentTarget.style.borderColor = "rgba(0,0,0,0.05)";
-                e.currentTarget.style.color = "#a0a0a5";
-              }}
-            >
-              <ExternalLink size={14} strokeWidth={2} />
-              GitHub
-            </a>
+            {!isMobile && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setHelpOpen(true)}
+                  title="Comment ajouter un skill"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 5,
+                    padding: "4px 10px 4px 7px",
+                    background: "rgba(0,0,0,0.03)",
+                    border: "1px solid rgba(0,0,0,0.05)",
+                    borderRadius: 7,
+                    cursor: "pointer",
+                    color: "#a0a0a5",
+                    fontSize: 12,
+                    fontWeight: 480,
+                    fontFamily: "inherit",
+                    letterSpacing: "-0.01em",
+                    transition: "all 0.2s cubic-bezier(0.23, 1, 0.32, 1)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(124, 107, 196, 0.08)";
+                    e.currentTarget.style.borderColor = "rgba(124, 107, 196, 0.2)";
+                    e.currentTarget.style.color = "#7c6bc4";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(0,0,0,0.03)";
+                    e.currentTarget.style.borderColor = "rgba(0,0,0,0.05)";
+                    e.currentTarget.style.color = "#a0a0a5";
+                  }}
+                >
+                  <HelpCircle size={14} strokeWidth={2} />
+                  Ajouter un skill
+                </button>
+                <a
+                  href="https://github.com/blacheyong/skills-library"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 5,
+                    padding: "4px 10px 4px 7px",
+                    background: "rgba(0,0,0,0.03)",
+                    border: "1px solid rgba(0,0,0,0.05)",
+                    borderRadius: 7,
+                    color: "#a0a0a5",
+                    fontSize: 12,
+                    fontWeight: 480,
+                    fontFamily: "inherit",
+                    letterSpacing: "-0.01em",
+                    textDecoration: "none",
+                    transition: "all 0.2s cubic-bezier(0.23, 1, 0.32, 1)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(0,0,0,0.06)";
+                    e.currentTarget.style.borderColor = "rgba(0,0,0,0.1)";
+                    e.currentTarget.style.color = "#2e2e30";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(0,0,0,0.03)";
+                    e.currentTarget.style.borderColor = "rgba(0,0,0,0.05)";
+                    e.currentTarget.style.color = "#a0a0a5";
+                  }}
+                >
+                  <ExternalLink size={14} strokeWidth={2} />
+                  GitHub
+                </a>
+              </>
+            )}
           </div>
           <SearchBar
             value={search}
