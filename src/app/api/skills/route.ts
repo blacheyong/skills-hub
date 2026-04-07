@@ -7,6 +7,13 @@ const REPO_OWNER = 'blacheyong';
 const REPO_NAME = 'skills-library';
 const BRANCH = 'main';
 const API_BASE = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
+
+function ghHeaders(): Record<string, string> {
+  const h: Record<string, string> = { 'Accept': 'application/vnd.github.v3+json' };
+  if (GITHUB_TOKEN) h['Authorization'] = `Bearer ${GITHUB_TOKEN}`;
+  return h;
+}
 
 function displayName(slug: string): string {
   const map: Record<string, string> = {
@@ -48,14 +55,13 @@ export async function GET() {
 
   try {
     const treeRes = await fetch(`${API_BASE}/git/trees/${BRANCH}?recursive=1`, {
-      headers: { 'Accept': 'application/vnd.github.v3+json' },
+      headers: ghHeaders(),
       next: { revalidate: 120 },
     });
 
     if (!treeRes.ok) throw new Error(`GitHub API: ${treeRes.status}`);
     const tree = await treeRes.json();
 
-    // Detect all subfolders
     const subFolders = tree.tree.filter((f: { path: string; type: string }) =>
       f.type === 'tree' &&
       (f.path.startsWith('metiers/') || f.path.startsWith('projects/')) &&
@@ -69,7 +75,6 @@ export async function GET() {
       }
     }
 
-    // Get .md files
     const mdFiles = tree.tree.filter((f: { path: string; type: string }) =>
       f.type === 'blob' &&
       f.path.endsWith('.md') &&
@@ -77,7 +82,6 @@ export async function GET() {
       f.path.split('/').length === 3
     );
 
-    // Fetch all file contents in parallel
     const results = await Promise.all(
       mdFiles.map(async (file: { path: string }) => {
         const parts = file.path.split('/');
@@ -88,7 +92,7 @@ export async function GET() {
         try {
           const raw = await fetch(
             `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${file.path}`,
-            { next: { revalidate: 120 } }
+            { headers: ghHeaders(), next: { revalidate: 120 } }
           );
           if (!raw.ok) return null;
 
@@ -126,7 +130,6 @@ export async function GET() {
     console.error('GitHub fetch error:', error);
   }
 
-  // Build folders
   const folderEntries = Array.from(folderMap.entries());
   folderEntries.sort((a, b) => {
     if (a[1].type !== b[1].type) return a[1].type === 'metiers' ? -1 : 1;

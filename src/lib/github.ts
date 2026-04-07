@@ -4,6 +4,13 @@ const REPO_OWNER = 'blacheyong';
 const REPO_NAME = 'skills-library';
 const BRANCH = 'main';
 const API_BASE = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
+
+function ghHeaders(): Record<string, string> {
+  const h: Record<string, string> = { 'Accept': 'application/vnd.github.v3+json' };
+  if (GITHUB_TOKEN) h['Authorization'] = `Bearer ${GITHUB_TOKEN}`;
+  return h;
+}
 
 // Display name mapping — auto-generated from slug if not found
 function displayName(slug: string): string {
@@ -25,7 +32,6 @@ function parseFrontmatter(content: string): { meta: Record<string, string | stri
     if (colonIdx === -1) continue;
     const key = line.slice(0, colonIdx).trim();
     const value = line.slice(colonIdx + 1).trim();
-    // Parse array values like [tag1, tag2]
     if (value.startsWith('[') && value.endsWith(']')) {
       meta[key] = value.slice(1, -1).split(',').map(s => s.trim());
     } else {
@@ -35,27 +41,24 @@ function parseFrontmatter(content: string): { meta: Record<string, string | stri
   return { meta, body: match[2].trim() };
 }
 
-// Fetch all skills from GitHub API
 export async function fetchSkillsFromGitHub(): Promise<{ skills: Skill[]; folders: Folder[] }> {
   const skills: Skill[] = [];
   const folderMap = new Map<string, { type: 'metiers' | 'projects'; skills: number; color: string }>();
 
   try {
-    // Fetch the repo tree recursively
     const treeRes = await fetch(`${API_BASE}/git/trees/${BRANCH}?recursive=1`, {
-      headers: { 'Accept': 'application/vnd.github.v3+json' },
-      next: { revalidate: 60 }, // cache for 60s
+      headers: ghHeaders(),
+      next: { revalidate: 60 },
     });
 
     if (!treeRes.ok) throw new Error(`GitHub API error: ${treeRes.status}`);
 
     const tree = await treeRes.json();
 
-    // Detect all subfolders in metiers/ and projects/ (even empty ones)
     const subFolders = tree.tree.filter((f: { path: string; type: string }) =>
       f.type === 'tree' &&
       (f.path.startsWith('metiers/') || f.path.startsWith('projects/')) &&
-      f.path.split('/').length === 2 // e.g. metiers/design-ui or projects/energir
+      f.path.split('/').length === 2
     );
 
     for (const sf of subFolders) {
@@ -67,15 +70,13 @@ export async function fetchSkillsFromGitHub(): Promise<{ skills: Skill[]; folder
       }
     }
 
-    // Filter for .md files in metiers/ and projects/
     const mdFiles = tree.tree.filter((f: { path: string; type: string }) =>
       f.type === 'blob' &&
       f.path.endsWith('.md') &&
       (f.path.startsWith('metiers/') || f.path.startsWith('projects/')) &&
-      f.path.split('/').length === 3 // e.g. metiers/design-ui/bolder.md
+      f.path.split('/').length === 3
     );
 
-    // Fetch each file content
     const fetchPromises = mdFiles.map(async (file: { path: string; sha: string }) => {
       const parts = file.path.split('/');
       const category = parts[0] as 'metiers' | 'projects';
@@ -84,7 +85,7 @@ export async function fetchSkillsFromGitHub(): Promise<{ skills: Skill[]; folder
 
       try {
         const contentRes = await fetch(`${API_BASE}/contents/${file.path}?ref=${BRANCH}`, {
-          headers: { 'Accept': 'application/vnd.github.v3+json' },
+          headers: ghHeaders(),
           next: { revalidate: 60 },
         });
 
@@ -111,7 +112,6 @@ export async function fetchSkillsFromGitHub(): Promise<{ skills: Skill[]; folder
           source_url: (meta.source_url as string) || undefined,
         };
 
-        // Track folder
         if (!folderMap.has(folder)) {
           folderMap.set(folder, { type: category, skills: 0, color: skill.color });
         }
@@ -129,7 +129,6 @@ export async function fetchSkillsFromGitHub(): Promise<{ skills: Skill[]; folder
     console.error('Failed to fetch skills from GitHub:', error);
   }
 
-  // Build folders from the map
   const folderEntries = Array.from(folderMap.entries());
   folderEntries.sort((a, b) => {
     if (a[1].type !== b[1].type) return a[1].type === 'metiers' ? -1 : 1;
