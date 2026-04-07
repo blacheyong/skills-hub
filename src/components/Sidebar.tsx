@@ -48,9 +48,22 @@ export function Sidebar({ folders, activeFolder, onFolderClick, onLogout, onHelp
   const [searchValue, setSearchValue] = useState('');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
   const drawerRef = useRef<HTMLElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+
+  // Cmd+K shortcut to focus search
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   const projectFolders = folders.filter((f) => f.type === 'projects');
   const metierFolders = folders.filter((f) => f.type === 'metiers');
@@ -125,6 +138,7 @@ export function Sidebar({ folders, activeFolder, onFolderClick, onLogout, onHelp
             className="absolute left-2.5 text-[#c2c2c6] pointer-events-none"
           />
           <input
+            ref={searchInputRef}
             type="text"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
