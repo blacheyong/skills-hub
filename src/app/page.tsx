@@ -14,7 +14,6 @@ import type { Skill, Folder, MoodPalette } from "@/lib/types";
 export default function HomePage() {
   const router = useRouter();
   const [search, setSearch] = useState("");
-  const [activeFolder, setActiveFolder] = useState<string | null>(null);
   const [mood, setMood] = useState<MoodPalette>("default");
   const [allFolders, setAllFolders] = useState<Folder[]>([]);
   const [allSkills, setAllSkills] = useState<Skill[]>([]);
@@ -48,23 +47,12 @@ export default function HomePage() {
   }, [q]);
 
   const filteredFolders = useMemo(() => {
-    let result = allFolders;
-    if (activeFolder) {
-      result = result.filter((f) => f.slug === activeFolder);
-    }
-    if (q) {
-      // Show folders that match by name OR contain matching skills
-      const foldersWithMatchingSkills = new Set(matchingSkills.map((s) => s.folder));
-      result = result.filter(
-        (f) => f.name.toLowerCase().includes(q) || foldersWithMatchingSkills.has(f.slug)
-      );
-    }
-    return result;
-  }, [q, activeFolder, matchingSkills]);
-
-  const activeFolderData = activeFolder
-    ? allFolders.find((f) => f.slug === activeFolder)
-    : null;
+    if (!q) return allFolders;
+    const foldersWithMatchingSkills = new Set(matchingSkills.map((s) => s.folder));
+    return allFolders.filter(
+      (f) => f.name.toLowerCase().includes(q) || foldersWithMatchingSkills.has(f.slug)
+    );
+  }, [q, allFolders, matchingSkills]);
 
   return (
     <div
@@ -77,10 +65,8 @@ export default function HomePage() {
     >
       <Sidebar
         folders={allFolders}
-        activeFolder={activeFolder}
-        onFolderClick={(slug) =>
-          setActiveFolder(slug === activeFolder ? null : slug)
-        }
+        activeFolder={null}
+        onFolderClick={(slug) => router.push(`/folder/${slug}`)}
         onLogout={handleLogout}
       />
 
@@ -113,7 +99,7 @@ export default function HomePage() {
               whiteSpace: "nowrap",
             }}
           >
-            {activeFolderData ? activeFolderData.name : "Tous les skills"}
+            Tous les skills
           </h1>
           <SearchBar
             value={search}
@@ -122,6 +108,12 @@ export default function HomePage() {
           />
         </div>
 
+        {loading ? (
+          <p style={{ color: "#b8b8bc", fontSize: 14, padding: "40px 0", textAlign: "center" }}>
+            Chargement des skills...
+          </p>
+        ) : (
+        <>
         <div
           data-mood-target=""
           className={`pal-${mood}`}
@@ -229,6 +221,8 @@ export default function HomePage() {
           >
             Aucun résultat trouvé
           </p>
+        )}
+        </>
         )}
       </main>
     </div>

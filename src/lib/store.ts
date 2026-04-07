@@ -1,7 +1,5 @@
 import type { Skill, Folder } from '@/lib/types';
-import { fetchSkillsFromGitHub } from '@/lib/github';
 
-// In-memory cache (client-side)
 let cachedSkills: Skill[] | null = null;
 let cachedFolders: Folder[] | null = null;
 let fetchPromise: Promise<void> | null = null;
@@ -12,21 +10,21 @@ export async function loadData(): Promise<{ skills: Skill[]; folders: Folder[] }
   }
 
   if (!fetchPromise) {
-    fetchPromise = fetchSkillsFromGitHub().then(({ skills, folders }) => {
-      cachedSkills = skills;
-      cachedFolders = folders;
-    });
+    fetchPromise = fetch('/api/skills')
+      .then((res) => res.json())
+      .then(({ skills, folders }) => {
+        cachedSkills = skills;
+        cachedFolders = folders;
+      })
+      .catch((err) => {
+        console.error('Failed to load skills:', err);
+        cachedSkills = [];
+        cachedFolders = [];
+      });
   }
 
   await fetchPromise;
   return { skills: cachedSkills!, folders: cachedFolders! };
-}
-
-export function getCachedData(): { skills: Skill[]; folders: Folder[] } | null {
-  if (cachedSkills && cachedFolders) {
-    return { skills: cachedSkills, folders: cachedFolders };
-  }
-  return null;
 }
 
 export function invalidateCache() {
