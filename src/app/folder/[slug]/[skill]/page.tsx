@@ -51,9 +51,18 @@ export default function SkillDetailPage() {
 
   const folderSlug = params.slug;
   const skillSlug = params.skill;
+  const [installCommand, setInstallCommand] = useState('');
 
   const folder = allFolders.find((f) => f.slug === folderSlug);
   const skill = allSkills.find((s) => s.folder === folderSlug && s.slug === skillSlug);
+
+  useEffect(() => {
+    if (!skill) return;
+    const path = `${skill.category}/${folderSlug}/${skill.slug}.md`;
+    fetch(`/api/install-cmd?path=${encodeURIComponent(path)}`)
+      .then((r) => r.json())
+      .then((data) => setInstallCommand(data.cmd || ''));
+  }, [skill, folderSlug]);
 
   if (!folder || !skill) {
     return (
@@ -102,7 +111,6 @@ export default function SkillDetailPage() {
     );
   }
 
-  const installCommand = `curl -sL https://raw.githubusercontent.com/blacheyong/skills-library/main/${skill.category}/${folderSlug}/${skill.slug}.md -o ~/.claude/skills/${skill.slug}.md`;
   const repoUrl = `https://github.com/blacheyong/skills-library/blob/main/${skill.category}/${folderSlug}/${skill.slug}.md`;
   const externalUrl = skill.source_url || null;
 
