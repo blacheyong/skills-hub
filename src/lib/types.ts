@@ -47,4 +47,5 @@ export const METIER_ICONS: Record<string, string> = {
   'workshops': 'users',
   'data-analytics': 'bar-chart-3',
   'templates': 'file-text',
+  'business-analyst': 'briefcase',
 };

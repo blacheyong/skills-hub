@@ -18,6 +18,7 @@ import {
   BarChart3,
   FileText,
   Package,
+  Briefcase,
 } from 'lucide-react';
 import type { Folder as FolderType, Bundle } from '@/lib/types';
 import { METIER_ICONS } from '@/lib/types';
@@ -46,6 +47,7 @@ const ICON_MAP: Record<string, typeof Palette> = {
   users: Users,
   'bar-chart-3': BarChart3,
   'file-text': FileText,
+  'briefcase': Briefcase,
 };
 
 function getMetierIcon(slug: string) {

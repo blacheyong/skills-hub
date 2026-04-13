@@ -21,6 +21,7 @@ function displayName(slug: string): string {
     'ux-research': 'UX Research',
     'data-analytics': 'Data Analytics',
     'hydro-quebec': 'Hydro-Qu\u00e9bec',
+    'business-analyst': 'Business Analyst',
   };
   return map[slug] || slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ');
 }
