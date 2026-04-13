@@ -119,6 +119,8 @@ export default function FolderPage() {
         folders={allFolders}
         activeFolder={slug}
         onFolderClick={(s) => router.push(`/folder/${s}`)}
+        activeBundle={null}
+        onBundleClick={(s) => router.push(`/bundle/${s}`)}
         onLogout={handleLogout}
       />
 

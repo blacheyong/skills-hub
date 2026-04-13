@@ -7,17 +7,17 @@ import { Sidebar } from "@/components/Sidebar";
 import { CopyButton } from "@/components/CopyButton";
 import { logout } from "@/lib/auth";
 import { loadData } from "@/lib/store";
+import { getBundleBySlug } from "@/lib/bundles";
 import { useIsMobile } from "@/lib/useIsMobile";
-import type { Skill, Folder } from "@/lib/types";
+import type { Folder } from "@/lib/types";
 import { useState, useEffect } from "react";
 
 const TAG_COLORS: Record<string, { bg: string; text: string }> = {
-  design: { bg: "#f0e6ff", text: "#7c3aed" },
-  code: { bg: "#dbeafe", text: "#2563eb" },
-  ux: { bg: "#fce7f3", text: "#db2777" },
-  motion: { bg: "#fef3c7", text: "#d97706" },
-  research: { bg: "#d1fae5", text: "#059669" },
-  strategy: { bg: "#fee2e2", text: "#dc2626" },
+  workflow: { bg: "#f0e6ff", text: "#7c3aed" },
+  tdd: { bg: "#dbeafe", text: "#2563eb" },
+  debugging: { bg: "#fee2e2", text: "#dc2626" },
+  collaboration: { bg: "#d1fae5", text: "#059669" },
+  agents: { bg: "#fef3c7", text: "#d97706" },
   default: { bg: "#f3f4f6", text: "#6b7280" },
 };
 
@@ -29,11 +29,10 @@ function getTagColor(tag: string) {
   return TAG_COLORS.default;
 }
 
-export default function SkillDetailPage() {
-  const params = useParams<{ slug: string; skill: string }>();
+export default function BundleDetailPage() {
+  const params = useParams<{ slug: string }>();
   const router = useRouter();
   const [allFolders, setAllFolders] = useState<Folder[]>([]);
-  const [allSkills, setAllSkills] = useState<Skill[]>([]);
   const isMobile = useIsMobile();
 
   const handleLogout = async () => {
@@ -43,28 +42,14 @@ export default function SkillDetailPage() {
   };
 
   useEffect(() => {
-    loadData().then(({ skills, folders }) => {
-      setAllSkills(skills);
+    loadData().then(({ folders }) => {
       setAllFolders(folders);
     });
   }, []);
 
-  const folderSlug = params.slug;
-  const skillSlug = params.skill;
-  const [installCommand, setInstallCommand] = useState('');
+  const bundle = getBundleBySlug(params.slug);
 
-  const folder = allFolders.find((f) => f.slug === folderSlug);
-  const skill = allSkills.find((s) => s.folder === folderSlug && s.slug === skillSlug);
-
-  useEffect(() => {
-    if (!skill) return;
-    const path = `${skill.category}/${folderSlug}/${skill.slug}.md`;
-    fetch(`/api/install-cmd?path=${encodeURIComponent(path)}`)
-      .then((r) => r.json())
-      .then((data) => setInstallCommand(data.cmd || ''));
-  }, [skill, folderSlug]);
-
-  if (!folder || !skill) {
+  if (!bundle) {
     return (
       <div
         style={{
@@ -78,6 +63,8 @@ export default function SkillDetailPage() {
           folders={allFolders}
           activeFolder={null}
           onFolderClick={(s) => router.push(`/folder/${s}`)}
+          activeBundle={null}
+          onBundleClick={(s) => router.push(`/bundle/${s}`)}
           onLogout={handleLogout}
         />
         <main
@@ -92,7 +79,7 @@ export default function SkillDetailPage() {
         >
           <div style={{ textAlign: "center" }}>
             <p style={{ fontSize: 16, color: "#666", marginBottom: 16 }}>
-              Skill introuvable
+              Pack introuvable
             </p>
             <Link
               href="/"
@@ -111,9 +98,6 @@ export default function SkillDetailPage() {
     );
   }
 
-  const repoUrl = `https://github.com/blacheyong/skills-library/blob/main/${skill.category}/${folderSlug}/${skill.slug}.md`;
-  const externalUrl = skill.source_url || null;
-
   return (
     <div
       style={{
@@ -125,9 +109,9 @@ export default function SkillDetailPage() {
     >
       <Sidebar
         folders={allFolders}
-        activeFolder={folderSlug}
+        activeFolder={null}
         onFolderClick={(s) => router.push(`/folder/${s}`)}
-        activeBundle={null}
+        activeBundle={params.slug}
         onBundleClick={(s) => router.push(`/bundle/${s}`)}
         onLogout={handleLogout}
       />
@@ -152,41 +136,26 @@ export default function SkillDetailPage() {
             color: "#999",
           }}
         >
-            <Link
-              href="/"
-              style={{
-                color: "#999",
-                textDecoration: "none",
-                transition: "color 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#1a1a1a";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = "#999";
-              }}
-            >
-              Home
-            </Link>
-            <span style={{ color: "#ddd" }}>/</span>
-            <Link
-              href={`/folder/${folderSlug}`}
-              style={{
-                color: "#999",
-                textDecoration: "none",
-                transition: "color 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#1a1a1a";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = "#999";
-              }}
-            >
-              {folder.name}
-            </Link>
-            <span style={{ color: "#ddd" }}>/</span>
-            <span style={{ color: "#666" }}>{skill.name}</span>
+          <Link
+            href="/"
+            style={{
+              color: "#999",
+              textDecoration: "none",
+              transition: "color 0.15s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "#1a1a1a";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "#999";
+            }}
+          >
+            Home
+          </Link>
+          <span style={{ color: "#ddd" }}>/</span>
+          <span style={{ color: "#999" }}>Packs</span>
+          <span style={{ color: "#ddd" }}>/</span>
+          <span style={{ color: "#666" }}>{bundle.name}</span>
         </nav>
 
         {/* Centered content area */}
@@ -210,10 +179,10 @@ export default function SkillDetailPage() {
                 margin: 0,
               }}
             >
-              {skill.name}
+              {bundle.name}
             </h1>
             <a
-              href={externalUrl || repoUrl}
+              href={bundle.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -239,7 +208,7 @@ export default function SkillDetailPage() {
               }}
             >
               <ExternalLink size={14} />
-              {externalUrl ? "Voir la source" : "Voir sur GitHub"}
+              Voir sur GitHub
             </a>
           </div>
 
@@ -252,7 +221,7 @@ export default function SkillDetailPage() {
               marginBottom: 16,
             }}
           >
-            {skill.tags.map((tag) => {
+            {bundle.tags.map((tag) => {
               const color = getTagColor(tag);
               return (
                 <span
@@ -288,11 +257,11 @@ export default function SkillDetailPage() {
             <span>
               Par{" "}
               <span style={{ color: "#666", fontWeight: 500 }}>
-                {skill.author}
+                {bundle.author}
               </span>
             </span>
             <span style={{ color: "#e0e0e0" }}>|</span>
-            <span>{skill.date}</span>
+            <span>{bundle.skills.length} skills inclus</span>
           </div>
 
           {/* Install command */}
@@ -320,36 +289,68 @@ export default function SkillDetailPage() {
                 flex: 1,
               }}
             >
-              {installCommand}
+              {bundle.installCommand}
             </code>
-            <CopyButton text={installCommand} />
+            <CopyButton text={bundle.installCommand} />
           </div>
 
-          {/* Full content */}
-          <div style={{ position: "relative" }}>
-            <div
+          {/* Description */}
+          <div
+            style={{
+              background: "#ffffff",
+              border: "1px solid rgba(0,0,0,0.06)",
+              borderRadius: 10,
+              padding: "28px",
+              fontSize: 14,
+              lineHeight: 1.75,
+              color: "#444",
+              whiteSpace: "pre-wrap",
+              marginBottom: 24,
+            }}
+          >
+            {bundle.longDescription}
+          </div>
+
+          {/* Skills included */}
+          <div
+            style={{
+              background: "#ffffff",
+              border: "1px solid rgba(0,0,0,0.06)",
+              borderRadius: 10,
+              padding: "20px 24px",
+            }}
+          >
+            <h3
               style={{
-                position: "absolute",
-                top: 12,
-                right: 12,
-                zIndex: 2,
+                fontSize: 13,
+                fontWeight: 580,
+                color: "#2e2e30",
+                marginBottom: 14,
+                letterSpacing: "-0.01em",
               }}
             >
-              <CopyButton text={skill.content} />
-            </div>
+              Skills inclus ({bundle.skills.length})
+            </h3>
             <div
               style={{
-                background: "#ffffff",
-                border: "1px solid rgba(0,0,0,0.06)",
-                borderRadius: 10,
-                padding: "28px",
-                fontSize: 14,
-                lineHeight: 1.75,
-                color: "#444",
-                whiteSpace: "pre-wrap",
+                display: "grid",
+                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                gap: "6px 24px",
               }}
             >
-              {skill.content}
+              {bundle.skills.map((skill) => (
+                <div
+                  key={skill}
+                  style={{
+                    fontSize: 13,
+                    color: "#666",
+                    padding: "4px 0",
+                    borderBottom: "1px solid rgba(0,0,0,0.03)",
+                  }}
+                >
+                  {skill}
+                </div>
+              ))}
             </div>
           </div>
         </div>

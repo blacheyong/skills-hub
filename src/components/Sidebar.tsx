@@ -17,9 +17,11 @@ import {
   Users,
   BarChart3,
   FileText,
+  Package,
 } from 'lucide-react';
-import type { Folder as FolderType } from '@/lib/types';
+import type { Folder as FolderType, Bundle } from '@/lib/types';
 import { METIER_ICONS } from '@/lib/types';
+import { BUNDLES } from '@/lib/bundles';
 import { clickPulse } from '@/lib/animations';
 import { useIsMobile } from '@/lib/useIsMobile';
 import { HelpModal } from '@/components/HelpModal';
@@ -29,6 +31,8 @@ interface SidebarProps {
   folders: FolderType[];
   activeFolder: string | null;
   onFolderClick: (slug: string) => void;
+  activeBundle?: string | null;
+  onBundleClick?: (slug: string) => void;
   onLogout?: () => void;
   onHelpClick?: () => void;
 }
@@ -52,7 +56,7 @@ function getMetierIcon(slug: string) {
   return Folder;
 }
 
-export function Sidebar({ folders, activeFolder, onFolderClick, onLogout, onHelpClick }: SidebarProps) {
+export function Sidebar({ folders, activeFolder, onFolderClick, activeBundle, onBundleClick, onLogout, onHelpClick }: SidebarProps) {
   const [searchValue, setSearchValue] = useState('');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
@@ -84,6 +88,10 @@ export function Sidebar({ folders, activeFolder, onFolderClick, onLogout, onHelp
 
   const filteredProjects = filterFolders(projectFolders);
   const filteredMetiers = filterFolders(metierFolders);
+
+  const filteredBundles = searchValue.trim()
+    ? BUNDLES.filter((b) => b.name.toLowerCase().includes(searchValue.toLowerCase()))
+    : BUNDLES;
 
   // Animate drawer open/close
   useEffect(() => {
@@ -195,6 +203,28 @@ export function Sidebar({ folders, activeFolder, onFolderClick, onLogout, onHelp
               ))}
             </ul>
           </div>
+        )}
+
+        {filteredBundles.length > 0 && (
+          <>
+            <div style={{ height: 1, background: 'rgba(0,0,0,0.06)', margin: '4px 6px 8px' }} />
+            <div className="mb-3">
+              <SectionLabel>Packs</SectionLabel>
+              <ul className="flex flex-col gap-px">
+                {filteredBundles.map((bundle) => (
+                  <BundleNavItem
+                    key={bundle.slug}
+                    bundle={bundle}
+                    isActive={activeBundle === bundle.slug}
+                    onClick={() => {
+                      if (onBundleClick) onBundleClick(bundle.slug);
+                      if (isMobile) setMobileOpen(false);
+                    }}
+                  />
+                ))}
+              </ul>
+            </div>
+          </>
         )}
       </nav>
 
@@ -405,6 +435,62 @@ function NavItem({ folder, isActive, onClick, icon: Icon }: NavItemProps) {
         >
           {folder.skillCount}
         </span>
+      </button>
+    </li>
+  );
+}
+
+interface BundleNavItemProps {
+  bundle: Bundle;
+  isActive: boolean;
+  onClick: () => void;
+}
+
+function BundleNavItem({ bundle, isActive, onClick }: BundleNavItemProps) {
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  const handleClick = () => {
+    clickPulse(btnRef.current);
+    onClick();
+  };
+
+  return (
+    <li>
+      <button
+        ref={btnRef}
+        type="button"
+        onClick={handleClick}
+        className="flex w-full items-center text-left transition-colors duration-150"
+        style={{
+          gap: 9,
+          padding: '6px 8px',
+          borderRadius: 6,
+          cursor: 'pointer',
+          fontSize: 14,
+          fontWeight: isActive ? 480 : 440,
+          color: isActive ? '#2e2e30' : '#8a8a8f',
+          background: isActive ? 'rgba(0,0,0,0.045)' : 'transparent',
+        }}
+        onMouseEnter={(e) => {
+          if (!isActive) {
+            e.currentTarget.style.background = 'rgba(0,0,0,0.03)';
+            e.currentTarget.style.color = '#2e2e30';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isActive) {
+            e.currentTarget.style.background = 'transparent';
+            e.currentTarget.style.color = '#8a8a8f';
+          }
+        }}
+      >
+        <Package
+          size={18}
+          strokeWidth={1.8}
+          className="shrink-0"
+          style={{ color: isActive ? '#8a8a8f' : '#c2c2c6' }}
+        />
+        <span className="flex-1 truncate">{bundle.name}</span>
       </button>
     </li>
   );

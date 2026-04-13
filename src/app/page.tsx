@@ -10,6 +10,7 @@ import { MoodSwitcher } from "@/components/MoodSwitcher";
 import { SearchBar } from "@/components/SearchBar";
 import { logout } from "@/lib/auth";
 import { loadData } from "@/lib/store";
+import { BUNDLES } from "@/lib/bundles";
 import type { Skill, Folder, MoodPalette } from "@/lib/types";
 
 export default function HomePage() {
@@ -56,6 +57,19 @@ export default function HomePage() {
     );
   }, [q, allFolders, matchingSkills]);
 
+  const projectFolders = filteredFolders.filter((f) => f.type === "projects");
+  const metierFolders = filteredFolders.filter((f) => f.type === "metiers");
+
+  const filteredBundles = useMemo(() => {
+    if (!q) return BUNDLES;
+    return BUNDLES.filter(
+      (b) =>
+        b.name.toLowerCase().includes(q) ||
+        b.description.toLowerCase().includes(q) ||
+        b.tags.some((t) => t.toLowerCase().includes(q))
+    );
+  }, [q]);
+
   return (
     <div
       style={{
@@ -69,6 +83,8 @@ export default function HomePage() {
         folders={allFolders}
         activeFolder={null}
         onFolderClick={(slug) => router.push(`/folder/${slug}`)}
+        activeBundle={null}
+        onBundleClick={(slug) => router.push(`/bundle/${slug}`)}
         onLogout={handleLogout}
       />
 
@@ -119,36 +135,120 @@ export default function HomePage() {
           </p>
         ) : (
         <>
-        <div
-          data-mood-target=""
-          className={`pal-${mood}`}
-          style={{
-            display: "grid",
-            gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(190px, 1fr))",
-            gap: 14,
-          }}
-        >
-          {filteredFolders.map((folder) => (
-            <FolderCard
-              key={folder.slug}
-              folder={folder}
-              href={`/folder/${folder.slug}`}
-            />
-          ))}
-        </div>
+        {/* Section: Projets */}
+        {projectFolders.length > 0 && (
+          <div style={{ marginBottom: 36 }}>
+            <h2 style={{
+              fontSize: 11,
+              fontWeight: 500,
+              textTransform: "uppercase",
+              letterSpacing: "0.3px",
+              color: "#b8b8bc",
+              marginBottom: 14,
+              paddingLeft: 2,
+            }}>
+              Projets
+            </h2>
+            <div
+              data-mood-target=""
+              className={`pal-${mood}`}
+              style={{
+                display: "grid",
+                gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(190px, 1fr))",
+                gap: 14,
+              }}
+            >
+              {projectFolders.map((folder) => (
+                <FolderCard key={folder.slug} folder={folder} href={`/folder/${folder.slug}`} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Section: Skills Métier */}
+        {metierFolders.length > 0 && (
+          <div style={{ marginBottom: 36 }}>
+            <h2 style={{
+              fontSize: 11,
+              fontWeight: 500,
+              textTransform: "uppercase",
+              letterSpacing: "0.3px",
+              color: "#b8b8bc",
+              marginBottom: 14,
+              paddingLeft: 2,
+            }}>
+              Skills M&eacute;tier
+            </h2>
+            <div
+              data-mood-target=""
+              className={`pal-${mood}`}
+              style={{
+                display: "grid",
+                gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(190px, 1fr))",
+                gap: 14,
+              }}
+            >
+              {metierFolders.map((folder) => (
+                <FolderCard key={folder.slug} folder={folder} href={`/folder/${folder.slug}`} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Section: Packs */}
+        {filteredBundles.length > 0 && (
+          <div style={{ marginBottom: 36 }}>
+            <h2 style={{
+              fontSize: 11,
+              fontWeight: 500,
+              textTransform: "uppercase",
+              letterSpacing: "0.3px",
+              color: "#b8b8bc",
+              marginBottom: 14,
+              paddingLeft: 2,
+            }}>
+              Packs
+            </h2>
+            <div
+              data-mood-target=""
+              className={`pal-${mood}`}
+              style={{
+                display: "grid",
+                gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(190px, 1fr))",
+                gap: 14,
+              }}
+            >
+              {filteredBundles.map((bundle, index) => (
+                <FolderCard
+                  key={bundle.slug}
+                  folder={{
+                    slug: bundle.slug,
+                    name: bundle.name,
+                    skillCount: 0,
+                    type: 'metiers',
+                    color: bundle.color,
+                    folderIndex: allFolders.length + index,
+                  }}
+                  href={`/bundle/${bundle.slug}`}
+                  hideCount
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Show matching skills when searching */}
         {q && matchingSkills.length > 0 && (
-          <div style={{ marginTop: 32 }}>
-            <h2
-              style={{
-                fontSize: 14,
-                fontWeight: 550,
-                color: "#8a8a8f",
-                marginBottom: 14,
-                letterSpacing: "-0.01em",
-              }}
-            >
+          <div style={{ marginBottom: 36 }}>
+            <h2 style={{
+              fontSize: 11,
+              fontWeight: 500,
+              textTransform: "uppercase",
+              letterSpacing: "0.3px",
+              color: "#b8b8bc",
+              marginBottom: 14,
+              paddingLeft: 2,
+            }}>
               Skills correspondants
             </h2>
             <div
@@ -215,7 +315,7 @@ export default function HomePage() {
           </div>
         )}
 
-        {filteredFolders.length === 0 && matchingSkills.length === 0 && (
+        {projectFolders.length === 0 && metierFolders.length === 0 && filteredBundles.length === 0 && matchingSkills.length === 0 && (
           <p
             style={{
               textAlign: "center",

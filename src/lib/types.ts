@@ -21,6 +21,19 @@ export interface Folder {
   folderIndex: number;
 }
 
+export interface Bundle {
+  slug: string;
+  name: string;
+  description: string;
+  longDescription: string;
+  skills: string[];
+  installCommand: string;
+  author: string;
+  repoUrl: string;
+  tags: string[];
+  color: string;
+}
+
 export type MoodPalette = 'default' | 'sunset' | 'ocean' | 'mono';
 
 export const FOLDER_COLORS = ['white', 'blue', 'gold', 'silver', 'mint', 'coral', 'purple', 'teal'] as const;

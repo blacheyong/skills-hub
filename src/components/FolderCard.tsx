@@ -6,9 +6,10 @@ import type { Folder } from '@/lib/types';
 interface FolderCardProps {
   folder: Folder;
   href: string;
+  hideCount?: boolean;
 }
 
-export function FolderCard({ folder, href }: FolderCardProps) {
+export function FolderCard({ folder, href, hideCount }: FolderCardProps) {
   const colorClass = `f${((folder.folderIndex ?? 0) % 8) + 1}`;
 
   return (
@@ -52,9 +53,11 @@ export function FolderCard({ folder, href }: FolderCardProps) {
         <span style={{ fontSize: 14, fontWeight: 560, color: '#2e2e30', letterSpacing: '-0.01em' }}>
           {folder.name}
         </span>
-        <span style={{ fontSize: 12, color: '#a0a0a5', fontWeight: 420 }}>
-          {folder.skillCount} skill{folder.skillCount !== 1 ? 's' : ''}
-        </span>
+        {!hideCount && (
+          <span style={{ fontSize: 12, color: '#a0a0a5', fontWeight: 420 }}>
+            {folder.skillCount} skill{folder.skillCount !== 1 ? 's' : ''}
+          </span>
+        )}
       </div>
     </Link>
   );
