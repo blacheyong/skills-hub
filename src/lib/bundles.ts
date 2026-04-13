@@ -34,7 +34,7 @@ Idéal pour : développement structuré, projets complexes, travail autonome de 
       'Using Superpowers',
     ],
     installCommand: '/plugin install superpowers@claude-plugins-official',
-    author: 'Jesse Vincent',
+    author: 'Superpowers',
     repoUrl: 'https://github.com/obra/superpowers',
     tags: ['workflow', 'tdd', 'debugging', 'collaboration', 'agents'],
     color: 'purple',
