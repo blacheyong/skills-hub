@@ -2,14 +2,14 @@
 
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Download } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
 import { CopyButton } from "@/components/CopyButton";
 import { logout } from "@/lib/auth";
 import { loadData } from "@/lib/store";
 import { useIsMobile } from "@/lib/useIsMobile";
 import type { Skill, Folder } from "@/lib/types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const TAG_COLORS: Record<string, { bg: string; text: string }> = {
   design: { bg: "#f0e6ff", text: "#7c3aed" },
@@ -29,12 +29,28 @@ function getTagColor(tag: string) {
   return TAG_COLORS.default;
 }
 
+const btnBase: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 6,
+  padding: "6px 14px",
+  borderRadius: 8,
+  fontSize: 13,
+  fontWeight: 500,
+  whiteSpace: "nowrap",
+  transition: "background 0.15s",
+};
+
 export default function SkillDetailPage() {
   const params = useParams<{ slug: string; skill: string }>();
   const router = useRouter();
   const [allFolders, setAllFolders] = useState<Folder[]>([]);
   const [allSkills, setAllSkills] = useState<Skill[]>([]);
+  const [installCommand, setInstallCommand] = useState("");
   const isMobile = useIsMobile();
+
+  const folderSlug = params.slug;
+  const skillSlug = params.skill;
 
   const handleLogout = async () => {
     await logout();
@@ -49,20 +65,30 @@ export default function SkillDetailPage() {
     });
   }, []);
 
-  const folderSlug = params.slug;
-  const skillSlug = params.skill;
-  const [installCommand, setInstallCommand] = useState('');
-
   const folder = allFolders.find((f) => f.slug === folderSlug);
   const skill = allSkills.find((s) => s.folder === folderSlug && s.slug === skillSlug);
 
   useEffect(() => {
     if (!skill) return;
+    const controller = new AbortController();
     const path = `${skill.category}/${folderSlug}/${skill.slug}.md`;
-    fetch(`/api/install-cmd?path=${encodeURIComponent(path)}`)
+    fetch(`/api/install-cmd?path=${encodeURIComponent(path)}`, { signal: controller.signal })
       .then((r) => r.json())
-      .then((data) => setInstallCommand(data.cmd || ''));
+      .then((data) => setInstallCommand(data.cmd || ""))
+      .catch((err) => { if (err.name !== "AbortError") throw err; });
+    return () => controller.abort();
   }, [skill, folderSlug]);
+
+  const handleDownload = useCallback(() => {
+    if (!skill) return;
+    const blob = new Blob([skill.content], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${skill.slug}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [skill]);
 
   if (!folder || !skill) {
     return (
@@ -141,7 +167,6 @@ export default function SkillDetailPage() {
           overflowX: "hidden",
         }}
       >
-        {/* Breadcrumb */}
         <nav
           style={{
             display: "flex",
@@ -152,46 +177,28 @@ export default function SkillDetailPage() {
             color: "#999",
           }}
         >
-            <Link
-              href="/"
-              style={{
-                color: "#999",
-                textDecoration: "none",
-                transition: "color 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#1a1a1a";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = "#999";
-              }}
-            >
-              Home
-            </Link>
-            <span style={{ color: "#ddd" }}>/</span>
-            <Link
-              href={`/folder/${folderSlug}`}
-              style={{
-                color: "#999",
-                textDecoration: "none",
-                transition: "color 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#1a1a1a";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = "#999";
-              }}
-            >
-              {folder.name}
-            </Link>
-            <span style={{ color: "#ddd" }}>/</span>
-            <span style={{ color: "#666" }}>{skill.name}</span>
+          <Link
+            href="/"
+            style={{ color: "#999", textDecoration: "none", transition: "color 0.15s" }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "#1a1a1a"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "#999"; }}
+          >
+            Home
+          </Link>
+          <span style={{ color: "#ddd" }}>/</span>
+          <Link
+            href={`/folder/${folderSlug}`}
+            style={{ color: "#999", textDecoration: "none", transition: "color 0.15s" }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "#1a1a1a"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "#999"; }}
+          >
+            {folder.name}
+          </Link>
+          <span style={{ color: "#ddd" }}>/</span>
+          <span style={{ color: "#666" }}>{skill.name}</span>
         </nav>
 
-        {/* Centered content area */}
         <div style={{ maxWidth: 680, margin: "0 auto" }}>
-          {/* Title row */}
           <div
             style={{
               display: "flex",
@@ -212,46 +219,48 @@ export default function SkillDetailPage() {
             >
               {skill.name}
             </h1>
-            <a
-              href={externalUrl || repoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "6px 14px",
-                background: "#2e2e30",
-                color: "#fff",
-                borderRadius: 8,
-                fontSize: 13,
-                fontWeight: 500,
-                textDecoration: "none",
-                whiteSpace: "nowrap",
-                flexShrink: 0,
-                transition: "background 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#444";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#2e2e30";
-              }}
-            >
-              <ExternalLink size={14} />
-              {externalUrl ? "Voir la source" : "Voir sur GitHub"}
-            </a>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+              <button
+                onClick={handleDownload}
+                style={{
+                  ...btnBase,
+                  background: "transparent",
+                  color: "#2e2e30",
+                  border: "1px solid rgba(0,0,0,0.14)",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#f0f0f0";
+                  e.currentTarget.style.borderColor = "rgba(0,0,0,0.22)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                  e.currentTarget.style.borderColor = "rgba(0,0,0,0.14)";
+                }}
+              >
+                <Download size={14} />
+                Télécharger .md
+              </button>
+              <a
+                href={externalUrl || repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  ...btnBase,
+                  background: "#2e2e30",
+                  color: "#fff",
+                  textDecoration: "none",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "#444"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "#2e2e30"; }}
+              >
+                <ExternalLink size={14} />
+                {externalUrl ? "Voir la source" : "Voir sur GitHub"}
+              </a>
+            </div>
           </div>
 
-          {/* Tags */}
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 6,
-              marginBottom: 16,
-            }}
-          >
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
             {skill.tags.map((tag) => {
               const color = getTagColor(tag);
               return (
@@ -274,7 +283,6 @@ export default function SkillDetailPage() {
             })}
           </div>
 
-          {/* Meta info */}
           <div
             style={{
               display: "flex",
@@ -287,15 +295,12 @@ export default function SkillDetailPage() {
           >
             <span>
               Par{" "}
-              <span style={{ color: "#666", fontWeight: 500 }}>
-                {skill.author}
-              </span>
+              <span style={{ color: "#666", fontWeight: 500 }}>{skill.author}</span>
             </span>
             <span style={{ color: "#e0e0e0" }}>|</span>
             <span>{skill.date}</span>
           </div>
 
-          {/* Install command */}
           <div
             style={{
               background: "#ffffff",
@@ -325,16 +330,8 @@ export default function SkillDetailPage() {
             <CopyButton text={installCommand} />
           </div>
 
-          {/* Full content */}
           <div style={{ position: "relative" }}>
-            <div
-              style={{
-                position: "absolute",
-                top: 12,
-                right: 12,
-                zIndex: 2,
-              }}
-            >
+            <div style={{ position: "absolute", top: 12, right: 12, zIndex: 2 }}>
               <CopyButton text={skill.content} />
             </div>
             <div
