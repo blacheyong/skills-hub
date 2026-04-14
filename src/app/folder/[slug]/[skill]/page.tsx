@@ -202,9 +202,10 @@ export default function SkillDetailPage() {
           <div
             style={{
               display: "flex",
+              flexDirection: isMobile ? "column" : "row",
               alignItems: "flex-start",
               justifyContent: "space-between",
-              gap: 16,
+              gap: isMobile ? 12 : 16,
               marginBottom: 16,
             }}
           >
