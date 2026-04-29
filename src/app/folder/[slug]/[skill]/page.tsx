@@ -8,6 +8,7 @@ import { CopyButton } from "@/components/CopyButton";
 import { logout } from "@/lib/auth";
 import { loadData } from "@/lib/store";
 import { useIsMobile } from "@/lib/useIsMobile";
+import { buildSkillMarkdown } from "@/lib/skillMarkdown";
 import type { Skill, Folder } from "@/lib/types";
 import { useState, useEffect, useCallback } from "react";
 
@@ -27,20 +28,6 @@ function getTagColor(tag: string) {
     if (key.includes(k)) return v;
   }
   return TAG_COLORS.default;
-}
-
-function buildSkillMarkdown(skill: Skill): string {
-  const fm: string[] = ["---"];
-  fm.push(`name: ${skill.name}`);
-  fm.push(`description: ${skill.description}`);
-  if (skill.tags && skill.tags.length > 0) {
-    fm.push(`tags: [${skill.tags.join(", ")}]`);
-  }
-  if (skill.author) fm.push(`author: ${skill.author}`);
-  if (skill.date) fm.push(`date: ${skill.date}`);
-  if (skill.color) fm.push(`color: ${skill.color}`);
-  fm.push("---", "", skill.content);
-  return fm.join("\n");
 }
 
 const btnBase: React.CSSProperties = {

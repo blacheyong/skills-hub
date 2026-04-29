@@ -1,15 +1,18 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Sidebar } from "@/components/Sidebar";
 import { SkillCard } from "@/components/SkillCard";
 import { SearchBar } from "@/components/SearchBar";
+import { SelectionBar } from "@/components/SelectionBar";
 import { logout } from "@/lib/auth";
 import { loadData } from "@/lib/store";
 import { pageEnter } from "@/lib/animations";
 import { useIsMobile } from "@/lib/useIsMobile";
+import { buildSkillMarkdown } from "@/lib/skillMarkdown";
+import { buildZip, encodeText } from "@/lib/zip";
 import type { Skill, Folder } from "@/lib/types";
 
 export default function FolderPage() {
@@ -18,6 +21,7 @@ export default function FolderPage() {
   const [search, setSearch] = useState("");
   const [allFolders, setAllFolders] = useState<Folder[]>([]);
   const [allSkills, setAllSkills] = useState<Skill[]>([]);
+  const [selectedSlugs, setSelectedSlugs] = useState<Set<string>>(new Set());
 
   const slug = params.slug;
   const mainRef = useRef<HTMLElement>(null);
@@ -37,7 +41,10 @@ export default function FolderPage() {
     });
   }, []);
 
-  // GSAP: animate only when switching between folders via sidebar (not on first load)
+  useEffect(() => {
+    setSelectedSlugs(new Set());
+  }, [slug]);
+
   useEffect(() => {
     if (prevSlugRef.current !== slug) {
       pageEnter(mainRef.current);
@@ -58,6 +65,42 @@ export default function FolderPage() {
         s.tags.some((t) => t.toLowerCase().includes(q))
     );
   }, [skills, search]);
+
+  const isMetier = folder?.type === "metiers";
+
+  const handleToggleSelect = useCallback((skillSlug: string) => {
+    setSelectedSlugs((prev) => {
+      const next = new Set(prev);
+      if (next.has(skillSlug)) next.delete(skillSlug);
+      else next.add(skillSlug);
+      return next;
+    });
+  }, []);
+
+  const handleSelectAll = useCallback(() => {
+    setSelectedSlugs(new Set(filteredSkills.map((s) => s.slug)));
+  }, [filteredSkills]);
+
+  const handleClear = useCallback(() => {
+    setSelectedSlugs(new Set());
+  }, []);
+
+  const handleDownloadSelection = useCallback(() => {
+    if (selectedSlugs.size === 0) return;
+    const selected = skills.filter((s) => selectedSlugs.has(s.slug));
+    const entries = selected.map((sk) => ({
+      name: `${sk.slug}.md`,
+      data: encodeText(buildSkillMarkdown(sk)),
+    }));
+    const zipBytes = buildZip(entries);
+    const blob = new Blob([zipBytes], { type: "application/zip" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${slug}-skills.zip`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [selectedSlugs, skills, slug]);
 
   if (!folder) {
     return (
@@ -106,6 +149,11 @@ export default function FolderPage() {
     );
   }
 
+  const showSelectionBar = isMetier && selectedSlugs.size > 0;
+  const allSelected =
+    filteredSkills.length > 0 &&
+    filteredSkills.every((s) => selectedSlugs.has(s.slug));
+
   return (
     <div
       style={{
@@ -133,7 +181,6 @@ export default function FolderPage() {
           minWidth: 0,
         }}
       >
-        {/* Breadcrumb */}
         <nav
           style={{
             display: "flex",
@@ -164,7 +211,6 @@ export default function FolderPage() {
           <span style={{ color: "#666" }}>{folder.name}</span>
         </nav>
 
-        {/* Header */}
         <div
           style={{
             display: "flex",
@@ -197,7 +243,25 @@ export default function FolderPage() {
               {filteredSkills.length} skill{filteredSkills.length !== 1 ? "s" : ""}
             </span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              flexWrap: "wrap",
+              justifyContent: "flex-end",
+            }}
+          >
+            {showSelectionBar && (
+              <SelectionBar
+                count={selectedSlugs.size}
+                allSelected={allSelected}
+                onSelectAll={handleSelectAll}
+                onDeselectAll={handleClear}
+                onDownload={handleDownloadSelection}
+                onClear={handleClear}
+              />
+            )}
             <SearchBar
               value={search}
               onChange={setSearch}
@@ -206,7 +270,6 @@ export default function FolderPage() {
           </div>
         </div>
 
-        {/* Skills Grid */}
         <div
           style={{
             display: "grid",
@@ -219,6 +282,9 @@ export default function FolderPage() {
               key={skill.slug}
               skill={skill}
               href={`/folder/${slug}/${skill.slug}`}
+              selectable={isMetier}
+              selected={selectedSlugs.has(skill.slug)}
+              onToggleSelect={handleToggleSelect}
             />
           ))}
 
