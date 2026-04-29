@@ -12,6 +12,7 @@ import { loadData } from "@/lib/store";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { buildSkillMarkdown } from "@/lib/skillMarkdown";
 import { buildZip, encodeText } from "@/lib/zip";
+import { navigateWithTransition } from "@/lib/navigate";
 import type { Skill, Folder } from "@/lib/types";
 
 export default function FolderPage() {
@@ -106,7 +107,7 @@ export default function FolderPage() {
         <Sidebar
           folders={allFolders}
           activeFolder={null}
-          onFolderClick={(s) => router.push(`/folder/${s}`)}
+          onFolderClick={(s) => navigateWithTransition(router, `/folder/${s}`)}
           onLogout={handleLogout}
         />
         <main
@@ -157,9 +158,9 @@ export default function FolderPage() {
       <Sidebar
         folders={allFolders}
         activeFolder={slug}
-        onFolderClick={(s) => router.push(`/folder/${s}`)}
+        onFolderClick={(s) => navigateWithTransition(router, `/folder/${s}`)}
         activeBundle={null}
-        onBundleClick={(s) => router.push(`/bundle/${s}`)}
+        onBundleClick={(s) => navigateWithTransition(router, `/bundle/${s}`)}
         onLogout={handleLogout}
       />
 
@@ -273,8 +274,6 @@ export default function FolderPage() {
         </div>
 
         <div
-          key={slug}
-          className="grid-fade-in"
           style={{
             display: "grid",
             gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(280px, 1fr))",

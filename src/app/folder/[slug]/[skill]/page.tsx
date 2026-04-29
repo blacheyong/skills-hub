@@ -9,6 +9,7 @@ import { logout } from "@/lib/auth";
 import { loadData } from "@/lib/store";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { buildSkillMarkdown } from "@/lib/skillMarkdown";
+import { navigateWithTransition } from "@/lib/navigate";
 import type { Skill, Folder } from "@/lib/types";
 import { useState, useEffect, useCallback } from "react";
 
@@ -105,7 +106,7 @@ export default function SkillDetailPage() {
         <Sidebar
           folders={allFolders}
           activeFolder={null}
-          onFolderClick={(s) => router.push(`/folder/${s}`)}
+          onFolderClick={(s) => navigateWithTransition(router, `/folder/${s}`)}
           onLogout={handleLogout}
         />
         <main
@@ -154,9 +155,9 @@ export default function SkillDetailPage() {
       <Sidebar
         folders={allFolders}
         activeFolder={folderSlug}
-        onFolderClick={(s) => router.push(`/folder/${s}`)}
+        onFolderClick={(s) => navigateWithTransition(router, `/folder/${s}`)}
         activeBundle={null}
-        onBundleClick={(s) => router.push(`/bundle/${s}`)}
+        onBundleClick={(s) => navigateWithTransition(router, `/bundle/${s}`)}
         onLogout={handleLogout}
       />
 
