@@ -1,6 +1,13 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import {
+  useState,
+  useMemo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useCallback,
+} from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Sidebar } from "@/components/Sidebar";
@@ -45,7 +52,9 @@ export default function FolderPage() {
     setSelectedSlugs(new Set());
   }, [slug]);
 
-  useEffect(() => {
+  // useLayoutEffect: apply opacity 0 + translateY before paint, so the
+  // new folder content never flashes at full opacity.
+  useLayoutEffect(() => {
     if (prevSlugRef.current !== slug) {
       pageEnter(mainRef.current);
       prevSlugRef.current = slug;
@@ -257,9 +266,11 @@ export default function FolderPage() {
                 style={{
                   opacity: showSelectionBar ? 1 : 0,
                   pointerEvents: showSelectionBar ? "auto" : "none",
-                  transform: showSelectionBar ? "translateX(0)" : "translateX(6px)",
+                  transform: showSelectionBar
+                    ? "translateX(0)"
+                    : "translateX(6px)",
                   transition:
-                    "opacity 0.18s ease, transform 0.18s cubic-bezier(0.23, 1, 0.32, 1)",
+                    "opacity 0.18s ease-out, transform 0.18s cubic-bezier(0.23, 1, 0.32, 1)",
                 }}
               >
                 <SelectionBar

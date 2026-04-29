@@ -1,15 +1,23 @@
 import gsap from 'gsap';
 
 /**
- * Smooth crossfade for main content when switching sidebar folders.
- * Opacity-only to avoid vertical "jump".
+ * Smooth entrance for main content when switching sidebar folders.
+ * Animates only transform + opacity (GPU-accelerated). Must be invoked
+ * from useLayoutEffect so the from-state lands before the next paint —
+ * otherwise the new folder briefly flashes at opacity 1.
  */
 export function pageEnter(element: HTMLElement | null) {
   if (!element) return;
   gsap.fromTo(
     element,
-    { opacity: 0 },
-    { opacity: 1, duration: 0.25, ease: 'power1.out' }
+    { opacity: 0, y: 4 },
+    {
+      opacity: 1,
+      y: 0,
+      duration: 0.22,
+      ease: 'power2.out',
+      clearProps: 'transform',
+    }
   );
 }
 
