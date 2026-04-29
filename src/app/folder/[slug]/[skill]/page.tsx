@@ -6,11 +6,10 @@ import { ExternalLink, Download } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
 import { CopyButton } from "@/components/CopyButton";
 import { logout } from "@/lib/auth";
-import { loadData } from "@/lib/store";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { buildSkillMarkdown } from "@/lib/skillMarkdown";
 import { navigateWithTransition } from "@/lib/navigate";
-import type { Skill, Folder } from "@/lib/types";
+import { useData } from "@/components/DataProvider";
 import { useState, useEffect, useCallback } from "react";
 
 const TAG_COLORS: Record<string, { bg: string; text: string }> = {
@@ -46,8 +45,7 @@ const btnBase: React.CSSProperties = {
 export default function SkillDetailPage() {
   const params = useParams<{ slug: string; skill: string }>();
   const router = useRouter();
-  const [allFolders, setAllFolders] = useState<Folder[]>([]);
-  const [allSkills, setAllSkills] = useState<Skill[]>([]);
+  const { skills: allSkills, folders: allFolders, loading } = useData();
   const [installCommand, setInstallCommand] = useState("");
   const isMobile = useIsMobile();
 
@@ -59,13 +57,6 @@ export default function SkillDetailPage() {
     router.push("/login");
     router.refresh();
   };
-
-  useEffect(() => {
-    loadData().then(({ skills, folders }) => {
-      setAllSkills(skills);
-      setAllFolders(folders);
-    });
-  }, []);
 
   const folder = allFolders.find((f) => f.slug === folderSlug);
   const skill = allSkills.find((s) => s.folder === folderSlug && s.slug === skillSlug);
@@ -92,6 +83,36 @@ export default function SkillDetailPage() {
     a.click();
     URL.revokeObjectURL(url);
   }, [skill]);
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          minHeight: "100vh",
+          background: "#f8f7f7",
+          fontFamily: "var(--font-inter), system-ui, -apple-system, sans-serif",
+        }}
+      >
+        <Sidebar
+          folders={allFolders}
+          activeFolder={folderSlug}
+          onFolderClick={(s) => navigateWithTransition(router, `/folder/${s}`)}
+          activeBundle={null}
+          onBundleClick={(s) => navigateWithTransition(router, `/bundle/${s}`)}
+          onLogout={handleLogout}
+        />
+        <main
+          style={{
+            marginLeft: isMobile ? 0 : 240,
+            padding: isMobile ? "68px 16px 16px" : "28px 40px",
+            flex: 1,
+            minWidth: 0,
+          }}
+        />
+      </div>
+    );
+  }
 
   if (!folder || !skill) {
     return (

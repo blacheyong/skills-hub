@@ -8,19 +8,17 @@ import { SkillCard } from "@/components/SkillCard";
 import { SearchBar } from "@/components/SearchBar";
 import { SelectionBar } from "@/components/SelectionBar";
 import { logout } from "@/lib/auth";
-import { loadData } from "@/lib/store";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { buildSkillMarkdown } from "@/lib/skillMarkdown";
 import { buildZip, encodeText } from "@/lib/zip";
 import { navigateWithTransition } from "@/lib/navigate";
-import type { Skill, Folder } from "@/lib/types";
+import { useData } from "@/components/DataProvider";
 
 export default function FolderPage() {
   const params = useParams<{ slug: string }>();
   const router = useRouter();
+  const { skills: allSkills, folders: allFolders, loading } = useData();
   const [search, setSearch] = useState("");
-  const [allFolders, setAllFolders] = useState<Folder[]>([]);
-  const [allSkills, setAllSkills] = useState<Skill[]>([]);
   const [selectedSlugs, setSelectedSlugs] = useState<Set<string>>(new Set());
 
   const slug = params.slug;
@@ -31,13 +29,6 @@ export default function FolderPage() {
     router.push("/login");
     router.refresh();
   };
-
-  useEffect(() => {
-    loadData().then(({ skills, folders }) => {
-      setAllSkills(skills);
-      setAllFolders(folders);
-    });
-  }, []);
 
   useEffect(() => {
     setSelectedSlugs(new Set());
@@ -93,6 +84,39 @@ export default function FolderPage() {
     a.click();
     URL.revokeObjectURL(url);
   }, [selectedSlugs, skills, slug]);
+
+  // While initial data is loading, render the chrome (sidebar) but
+  // an empty main — avoids the "Dossier introuvable" flash that
+  // View Transitions API would otherwise capture as a snapshot.
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          minHeight: "100vh",
+          background: "#f8f7f7",
+          fontFamily: "var(--font-inter), system-ui, -apple-system, sans-serif",
+        }}
+      >
+        <Sidebar
+          folders={allFolders}
+          activeFolder={slug}
+          onFolderClick={(s) => navigateWithTransition(router, `/folder/${s}`)}
+          activeBundle={null}
+          onBundleClick={(s) => navigateWithTransition(router, `/bundle/${s}`)}
+          onLogout={handleLogout}
+        />
+        <main
+          style={{
+            marginLeft: isMobile ? 0 : 240,
+            padding: isMobile ? "68px 16px 16px" : "28px 40px",
+            flex: 1,
+            minWidth: 0,
+          }}
+        />
+      </div>
+    );
+  }
 
   if (!folder) {
     return (
