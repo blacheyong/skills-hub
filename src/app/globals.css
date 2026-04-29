@@ -35,6 +35,29 @@ body {
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius: 999px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.14); }
 
+/* ====== FOLDER PAGE ENTRANCE ====== */
+@keyframes folder-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.folder-main-enter {
+  animation: folder-enter 0.22s var(--ease-out) both;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folder-main-enter {
+    animation: none;
+  }
+}
+
 /* ====== 3D FOLDER ====== */
 .folder {
   width: 100px; height: 76px;

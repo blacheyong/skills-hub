@@ -23,7 +23,6 @@ import {
 import type { Folder as FolderType, Bundle } from '@/lib/types';
 import { METIER_ICONS } from '@/lib/types';
 import { BUNDLES } from '@/lib/bundles';
-import { clickPulse } from '@/lib/animations';
 import { useIsMobile } from '@/lib/useIsMobile';
 import { HelpModal } from '@/components/HelpModal';
 import gsap from 'gsap';
@@ -58,7 +57,7 @@ function getMetierIcon(slug: string) {
   return Folder;
 }
 
-export function Sidebar({ folders, activeFolder, onFolderClick, activeBundle, onBundleClick, onLogout, onHelpClick }: SidebarProps) {
+export function Sidebar({ folders, activeFolder, onFolderClick, activeBundle, onBundleClick, onLogout }: SidebarProps) {
   const [searchValue, setSearchValue] = useState('');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
@@ -267,7 +266,6 @@ export function Sidebar({ folders, activeFolder, onFolderClick, activeBundle, on
   if (isMobile) {
     return (
       <>
-        {/* Mobile header bar */}
         <header
           style={{
             position: 'fixed',
@@ -303,7 +301,6 @@ export function Sidebar({ folders, activeFolder, onFolderClick, activeBundle, on
           </span>
         </header>
 
-        {/* Overlay */}
         <div
           ref={overlayRef}
           onClick={() => setMobileOpen(false)}
@@ -318,7 +315,6 @@ export function Sidebar({ folders, activeFolder, onFolderClick, activeBundle, on
           }}
         />
 
-        {/* Drawer */}
         <aside
           ref={drawerRef}
           className="fixed left-0 top-0 flex h-full flex-col"
@@ -387,19 +383,11 @@ interface NavItemProps {
 }
 
 function NavItem({ folder, isActive, onClick, icon: Icon }: NavItemProps) {
-  const btnRef = useRef<HTMLButtonElement>(null);
-
-  const handleClick = () => {
-    clickPulse(btnRef.current);
-    onClick();
-  };
-
   return (
     <li>
       <button
-        ref={btnRef}
         type="button"
-        onClick={handleClick}
+        onClick={onClick}
         className="flex w-full items-center text-left transition-colors duration-150"
         style={{
           gap: 9,
@@ -449,19 +437,11 @@ interface BundleNavItemProps {
 }
 
 function BundleNavItem({ bundle, isActive, onClick }: BundleNavItemProps) {
-  const btnRef = useRef<HTMLButtonElement>(null);
-
-  const handleClick = () => {
-    clickPulse(btnRef.current);
-    onClick();
-  };
-
   return (
     <li>
       <button
-        ref={btnRef}
         type="button"
-        onClick={handleClick}
+        onClick={onClick}
         className="flex w-full items-center text-left transition-colors duration-150"
         style={{
           gap: 9,

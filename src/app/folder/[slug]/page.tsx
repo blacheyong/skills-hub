@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useMemo,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useCallback,
-} from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Sidebar } from "@/components/Sidebar";
@@ -16,7 +9,6 @@ import { SearchBar } from "@/components/SearchBar";
 import { SelectionBar } from "@/components/SelectionBar";
 import { logout } from "@/lib/auth";
 import { loadData } from "@/lib/store";
-import { pageEnter } from "@/lib/animations";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { buildSkillMarkdown } from "@/lib/skillMarkdown";
 import { buildZip, encodeText } from "@/lib/zip";
@@ -31,9 +23,7 @@ export default function FolderPage() {
   const [selectedSlugs, setSelectedSlugs] = useState<Set<string>>(new Set());
 
   const slug = params.slug;
-  const mainRef = useRef<HTMLElement>(null);
   const isMobile = useIsMobile();
-  const prevSlugRef = useRef<string>(slug);
 
   const handleLogout = async () => {
     await logout();
@@ -50,15 +40,7 @@ export default function FolderPage() {
 
   useEffect(() => {
     setSelectedSlugs(new Set());
-  }, [slug]);
-
-  // useLayoutEffect: apply opacity 0 + translateY before paint, so the
-  // new folder content never flashes at full opacity.
-  useLayoutEffect(() => {
-    if (prevSlugRef.current !== slug) {
-      pageEnter(mainRef.current);
-      prevSlugRef.current = slug;
-    }
+    setSearch("");
   }, [slug]);
 
   const folder = allFolders.find((f) => f.slug === slug);
@@ -182,7 +164,8 @@ export default function FolderPage() {
       />
 
       <main
-        ref={mainRef}
+        key={slug}
+        className="folder-main-enter"
         style={{
           marginLeft: isMobile ? 0 : 240,
           padding: isMobile ? "68px 16px 16px" : "28px 40px",
