@@ -29,6 +29,20 @@ function getTagColor(tag: string) {
   return TAG_COLORS.default;
 }
 
+function buildSkillMarkdown(skill: Skill): string {
+  const fm: string[] = ["---"];
+  fm.push(`name: ${skill.name}`);
+  fm.push(`description: ${skill.description}`);
+  if (skill.tags && skill.tags.length > 0) {
+    fm.push(`tags: [${skill.tags.join(", ")}]`);
+  }
+  if (skill.author) fm.push(`author: ${skill.author}`);
+  if (skill.date) fm.push(`date: ${skill.date}`);
+  if (skill.color) fm.push(`color: ${skill.color}`);
+  fm.push("---", "", skill.content);
+  return fm.join("\n");
+}
+
 const btnBase: React.CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
@@ -81,7 +95,8 @@ export default function SkillDetailPage() {
 
   const handleDownload = useCallback(() => {
     if (!skill) return;
-    const blob = new Blob([skill.content], { type: "text/markdown;charset=utf-8" });
+    const markdown = buildSkillMarkdown(skill);
+    const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
