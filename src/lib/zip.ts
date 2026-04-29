@@ -14,7 +14,7 @@ interface ZipEntry {
   data: Uint8Array;
 }
 
-export function buildZip(entries: ZipEntry[]): Uint8Array {
+export function buildZip(entries: ZipEntry[]): Uint8Array<ArrayBuffer> {
   const encoder = new TextEncoder();
   const localChunks: Uint8Array[] = [];
   const centralChunks: Uint8Array[] = [];
@@ -98,6 +98,6 @@ export function buildZip(entries: ZipEntry[]): Uint8Array {
   return result;
 }
 
-export function encodeText(s: string): Uint8Array {
+export function encodeText(s: string): Uint8Array<ArrayBuffer> {
   return new TextEncoder().encode(s);
 }
