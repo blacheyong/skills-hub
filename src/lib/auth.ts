@@ -15,6 +15,7 @@ export async function login(username: string, password: string) {
   const response = await fetch('/api/auth/login', {
     body: JSON.stringify({ username, password }),
     cache: 'no-store',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -31,6 +32,7 @@ export async function login(username: string, password: string) {
 export async function logout() {
   await fetch('/api/auth/logout', {
     cache: 'no-store',
+    credentials: 'include',
     method: 'POST',
   });
 

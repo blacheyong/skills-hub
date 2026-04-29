@@ -35,6 +35,20 @@ body {
   font-feature-settings: "cv01", "ss03";
 }
 
+/* Mobile niceties: kill the iOS tap highlight blue flash and the 300ms
+   tap delay on interactive elements, scoped under 1024px (matches the
+   useIsMobile breakpoint) so true desktop is untouched. */
+@media (max-width: 1023px) {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  button,
+  a,
+  [role="button"] {
+    touch-action: manipulation;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

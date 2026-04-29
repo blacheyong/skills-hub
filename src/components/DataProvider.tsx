@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import type { Skill, Folder } from '@/lib/types';
 import { loadData } from '@/lib/store';
 
@@ -17,6 +18,22 @@ const DataContext = createContext<DataContextValue>({
 });
 
 export function DataProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  // Skip data loading on /login: /api/skills returns 401 there, which would
+  // trigger window.location.assign('/login') in the store and create a loop.
+  if (pathname === '/login') {
+    return (
+      <DataContext.Provider value={{ skills: [], folders: [], loading: false }}>
+        {children}
+      </DataContext.Provider>
+    );
+  }
+
+  return <AuthenticatedDataProvider>{children}</AuthenticatedDataProvider>;
+}
+
+function AuthenticatedDataProvider({ children }: { children: React.ReactNode }) {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [folders, setFolders] = useState<Folder[]>([]);
   const [loading, setLoading] = useState(true);

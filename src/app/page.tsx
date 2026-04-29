@@ -154,7 +154,7 @@ export default function HomePage() {
               className={`pal-${mood}`}
               style={{
                 display: "grid",
-                gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(190px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 190px), 1fr))",
                 gap: 14,
               }}
             >
@@ -184,7 +184,7 @@ export default function HomePage() {
               className={`pal-${mood}`}
               style={{
                 display: "grid",
-                gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(190px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 190px), 1fr))",
                 gap: 14,
               }}
             >
@@ -214,7 +214,7 @@ export default function HomePage() {
               className={`pal-${mood}`}
               style={{
                 display: "grid",
-                gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(190px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 190px), 1fr))",
                 gap: 14,
               }}
             >

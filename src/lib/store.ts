@@ -10,7 +10,7 @@ export async function loadData(): Promise<{ skills: Skill[]; folders: Folder[] }
   }
 
   if (!fetchPromise) {
-    fetchPromise = fetch('/api/skills')
+    fetchPromise = fetch('/api/skills', { credentials: 'include' })
       .then(async (res) => {
         if (res.status === 401) {
           if (typeof window !== 'undefined') {

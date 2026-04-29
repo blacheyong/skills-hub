@@ -259,13 +259,14 @@ export default function FolderPage() {
           <div
             style={{
               display: "flex",
-              alignItems: "center",
+              flexDirection: isMobile ? "column" : "row",
+              alignItems: isMobile ? "stretch" : "center",
               gap: 12,
-              justifyContent: "flex-end",
+              justifyContent: isMobile ? "flex-start" : "flex-end",
               flexWrap: "nowrap",
             }}
           >
-            {isMetier && (
+            {isMetier && (!isMobile || showSelectionBar) && (
               <div
                 style={{
                   opacity: showSelectionBar ? 1 : 0,
