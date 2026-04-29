@@ -164,8 +164,6 @@ export default function FolderPage() {
       />
 
       <main
-        key={slug}
-        className="folder-main-enter"
         style={{
           marginLeft: isMobile ? 0 : 240,
           padding: isMobile ? "68px 16px 16px" : "28px 40px",
@@ -275,6 +273,8 @@ export default function FolderPage() {
         </div>
 
         <div
+          key={slug}
+          className="grid-fade-in"
           style={{
             display: "grid",
             gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(280px, 1fr))",
