@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ExternalLink, Download } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
 import { CopyButton } from "@/components/CopyButton";
+import { TransitionLink } from "@/components/TransitionLink";
 import { logout } from "@/lib/auth";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { buildSkillMarkdown } from "@/lib/skillMarkdown";
@@ -201,23 +202,23 @@ export default function SkillDetailPage() {
             color: "#999",
           }}
         >
-          <Link
+          <TransitionLink
             href="/"
             style={{ color: "#999", textDecoration: "none", transition: "color 0.15s" }}
             onMouseEnter={(e) => { e.currentTarget.style.color = "#1a1a1a"; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = "#999"; }}
           >
             Home
-          </Link>
+          </TransitionLink>
           <span style={{ color: "#ddd" }}>/</span>
-          <Link
+          <TransitionLink
             href={`/folder/${folderSlug}`}
             style={{ color: "#999", textDecoration: "none", transition: "color 0.15s" }}
             onMouseEnter={(e) => { e.currentTarget.style.color = "#1a1a1a"; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = "#999"; }}
           >
             {folder.name}
-          </Link>
+          </TransitionLink>
           <span style={{ color: "#ddd" }}>/</span>
           <span style={{ color: "#666" }}>{skill.name}</span>
         </nav>

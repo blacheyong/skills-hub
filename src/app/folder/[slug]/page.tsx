@@ -7,6 +7,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { SkillCard } from "@/components/SkillCard";
 import { SearchBar } from "@/components/SearchBar";
 import { SelectionBar } from "@/components/SelectionBar";
+import { TransitionLink } from "@/components/TransitionLink";
 import { logout } from "@/lib/auth";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { buildSkillMarkdown } from "@/lib/skillMarkdown";
@@ -85,9 +86,6 @@ export default function FolderPage() {
     URL.revokeObjectURL(url);
   }, [selectedSlugs, skills, slug]);
 
-  // While initial data is loading, render the chrome (sidebar) but
-  // an empty main — avoids the "Dossier introuvable" flash that
-  // View Transitions API would otherwise capture as a snapshot.
   if (loading) {
     return (
       <div
@@ -206,7 +204,7 @@ export default function FolderPage() {
             color: "#999",
           }}
         >
-          <Link
+          <TransitionLink
             href="/"
             style={{
               color: "#999",
@@ -221,7 +219,7 @@ export default function FolderPage() {
             }}
           >
             Home
-          </Link>
+          </TransitionLink>
           <span style={{ color: "#ccc" }}>/</span>
           <span style={{ color: "#666" }}>{folder.name}</span>
         </nav>
