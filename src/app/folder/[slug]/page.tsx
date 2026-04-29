@@ -248,19 +248,29 @@ export default function FolderPage() {
               display: "flex",
               alignItems: "center",
               gap: 12,
-              flexWrap: "wrap",
               justifyContent: "flex-end",
+              flexWrap: "nowrap",
             }}
           >
-            {showSelectionBar && (
-              <SelectionBar
-                count={selectedSlugs.size}
-                allSelected={allSelected}
-                onSelectAll={handleSelectAll}
-                onDeselectAll={handleClear}
-                onDownload={handleDownloadSelection}
-                onClear={handleClear}
-              />
+            {isMetier && (
+              <div
+                style={{
+                  opacity: showSelectionBar ? 1 : 0,
+                  pointerEvents: showSelectionBar ? "auto" : "none",
+                  transform: showSelectionBar ? "translateX(0)" : "translateX(6px)",
+                  transition:
+                    "opacity 0.18s ease, transform 0.18s cubic-bezier(0.23, 1, 0.32, 1)",
+                }}
+              >
+                <SelectionBar
+                  count={selectedSlugs.size}
+                  allSelected={allSelected}
+                  onSelectAll={handleSelectAll}
+                  onDeselectAll={handleClear}
+                  onDownload={handleDownloadSelection}
+                  onClear={handleClear}
+                />
+              </div>
             )}
             <SearchBar
               value={search}
